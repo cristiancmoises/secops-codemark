@@ -367,7 +367,11 @@ class IntegrityTests(unittest.TestCase):
 
         def descriptor_stat(descriptor):
             value = original_fstat(descriptor)
-            return self.CtimeStat(value, value.st_ctime_ns + 1)
+            return (
+                self.CtimeStat(value, value.st_ctime_ns + 1)
+                if stat.S_ISREG(value.st_mode)
+                else value
+            )
 
         for directory_fds in {False, integrity.DIRECTORY_FDS}:
             with (
@@ -413,6 +417,24 @@ class IntegrityTests(unittest.TestCase):
             self.assertRaises(core.CodeMarkError),
         ):
             integrity._hash_file(path, before, None, path.name)
+
+    @unittest.skipUnless(integrity.DIRECTORY_FDS, "directory descriptors unavailable")
+    def test_directory_ctime_change_before_open_is_rejected(self):
+        self.put("nested/settings.json", b"{}")
+        directory = (self.root / "nested").stat()
+        original_fstat = os.fstat
+
+        def descriptor_stat(descriptor):
+            value = original_fstat(descriptor)
+            if (value.st_dev, value.st_ino) == (directory.st_dev, directory.st_ino):
+                return self.CtimeStat(value, value.st_ctime_ns + 1)
+            return value
+
+        with (
+            patch("os.fstat", side_effect=descriptor_stat),
+            self.assertRaises(core.CodeMarkError),
+        ):
+            integrity.snapshot(self.root)
 
     def test_read_only_mode_change_is_detected_on_all_platforms(self):
         path = self.put("settings.json", b"{}")

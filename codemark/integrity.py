@@ -309,9 +309,7 @@ def _inventory(root):
                     else None
                 )
                 try:
-                    if child is not None and _entry_stamp(
-                        os.fstat(child)
-                    ) != _entry_stamp(info):
+                    if child is not None and _stamp(os.fstat(child)) != _stamp(info):
                         _invalid("Diretório alterado durante a abertura do inventário.")
                     walk(path, child)
                 finally:
