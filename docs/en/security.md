@@ -1,38 +1,45 @@
 # Security model
 
-CodeMark records a relationship between a source tree, a declared identity, and a particular content reference. It is a provenance and integrity tool, with heuristic source-copy triage.
+SecOps Codemark provides file-integrity references, hybrid authentication, linked local attestations, optional encrypted exports, and removable source comments. Each operation has a separate coverage and trust boundary.
 
-## What each layer means
+## What each layer provides
 
 | Layer | Provides | Limit |
 | --- | --- | --- |
-| Provenance comment | A project and file identifier that survives renaming | Removable and forgeable |
-| SHA-256 manifest | Integrity differences against the saved reference | An unsigned local manifest can also be edited |
-| Pinned-key signature | Authentication of that manifest against one key | No legal ownership, trusted date, or originality proof |
-| Normalized token sketch | Candidates after some identifier and comment changes | False positives and negatives; per-file approximation |
+| SHA-256 + SHA-512 snapshot | File-byte and mode differences against a saved reference | An unsigned local reference can also be replaced |
+| ML-DSA-87 + Ed25519 attestations | Both signatures and independently pinned latest signer identities | No trusted time, legal ownership, or automatic revocation |
+| Linked canonical history | Signature, sequence, project and previous-record consistency | A valid old whole history needs an independent expected checkpoint to reject rollback |
+| Recipient-encrypted Zupt bundle | Explicit private export using ML-KEM-768 + X25519 | The chosen recipient can read included content; key loss may prevent recovery |
+| Source comment and token sketch | Removable identifiers and source-copy candidates | Forgeable marks, false positives and negatives |
 
-Public code remains available for study and copying under its license. A comment does not block reverse engineering, decompilation, or independent reimplementation. Source licenses and existing copyright notices remain applicable.
+Neither a hash nor a signature hides content. Confidentiality requires the explicit encrypted bundle operation. Public source archives remain unencrypted. Public code remains available for study and copying under its license.
 
-## Operational boundary
+## Independent trust
 
-Work on a stable local tree with no concurrent editors or builds writing to it. Symlinks in the selected path or tree, special files, malformed metadata, and resource-limit violations are refused. Known dependency and build directories are excluded without traversal.
+Hybrid authentication requires both complete trusted public-key fingerprints. Embedded keys do not establish trust. Keep the expected latest checkpoint outside the party-controlled tree to detect substitution by an older valid history. A locally recorded time is not a trusted timestamp.
 
-Operations use per-file replacement and rollback for ordinary errors. Forced termination or loss of power can leave a partial state. Keep a recoverable commit or backup. Remove a stale `.codemark/lock` only after confirming no operation is active.
+The operator manages key origin, compromise, rotation, revocation policy, archived trust records and the verification executable. There is no online identity, revocation, timestamp or transparency service. A compromised private key or host invalidates assumptions the application cannot repair.
 
-The filesystem and local account are trusted. A hostile kernel, deliberate filesystem races, a stolen signing key, compromised CI, and a replaced verification executable are outside this boundary.
+## Filesystem boundary
 
-## Privacy and key handling
+Operate on a stable local tree. Snapshot enumeration refuses symlinks, special files, malformed metadata, detected races and resource-limit violations. It excludes `.codemark`, `.git`, `.hg` and `.svn` components with reasons. Other regular-file formats are included regardless of extension.
 
-The CLI does not upload source, call an AI model, or require a network connection. It does not scan secrets. A manifest can reveal relative file paths, the declared owner, and content fingerprints; review metadata before sharing it.
+Detection of concurrent changes is not a guarantee against a malicious kernel, deliberate adversarial filesystem races, or hostile local account. Snapshot coverage is files, not empty directories, a complete filesystem image, or automatic backup.
 
-Use existing signing keys and keep their private files outside the project. CodeMark delegates signing to local OpenSSH or GnuPG facilities. Manage rotation and revocation independently; no online revocation service is queried.
+Legacy comment operations have different exclusions, source-format restrictions, smaller limits and per-file rollback. Forced termination or power loss can leave partial state. Preserve a recoverable commit or backup and remove a leftover lock only after confirming no operation is running.
 
-## Interpreting a match
+## Privacy of exports and metadata
 
-A match is a lead for inspection. Common boilerplate can match. Rewritten, split, merged, or independently implemented code can fail to match. A similarity score is not a legal finding or a literal fraction of copied source.
+The CLI runs locally and does not upload your project. It is not a secret scanner. A snapshot and attestation can reveal paths, hashes, project identity, key fingerprints and local times.
+
+A private bundle includes regular files in the selected tree, including version-control history and `.codemark`. Review its scope, keep secrets and all private keys outside the selected root, and share only with intended recipients. Encryption does not make a public repository private or conceal copies that already exist.
+
+## Cryptographic scope
+
+Hybrid signing uses OpenSSL 3.5's default provider; private bundles delegate their established recipient format to Zupt. SecOps Codemark does not claim FIPS 140 certification, a formal proof of its Python implementation, host isolation, universal post-quantum protection, or a benchmark not recorded in release evidence.
+
+Read the [cryptography wiki](wiki/cryptography.md) for standards and [Validation](validation.md) for actual versions, exercised negative cases and platform limits.
 
 ## Report a vulnerability
 
-Follow the repository's [security policy](../../SECURITY.md). Never include private keys, credentials, private project source, or another person's personal data in a public report.
-
-The [evidence page](validation.md) distinguishes current release checks from historical reports. No audit record is a guarantee that defects do not exist.
+Follow the [security policy](../../SECURITY.md). Use synthetic reproducers and do not include credentials, private keys, private source or personal data in public reports.

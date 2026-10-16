@@ -2,7 +2,7 @@
 
 ## Scope
 
-CodeMark's current release line is 0.3.x. Security fixes are developed against the latest source and current release; the project does not promise backports or a response deadline. Historical qualification files remain evidence for their stated version only.
+SecOps Codemark's current release line is 0.4.x. Security fixes are developed against the latest source and current release; the project does not promise backports or a response deadline. Historical qualification files remain evidence for their stated version only.
 
 Read the [security model](docs/en/security.md) or [modelo de segurança](docs/pt-BR/security.md) before using the tool. Reversible comments are not an access-control mechanism. Similarity scores do not establish plagiarism or ownership. A signature authenticates a manifest against a pinned key without proving date or originality.
 
@@ -24,4 +24,4 @@ The website's dated evidence records are development checks and agent reviews wh
 
 Use **Security → Report a vulnerability** no GitHub quando disponível. Se o relato privado não estiver disponível, abra uma issue pedindo um contato privado, sem detalhes de exploração ou dados sensíveis. Aguarde combinar um canal antes de enviar esse material.
 
-Informe versão, plataforma, comando, comportamento esperado e observado, código de saída e reproducer sintético mínimo. Nunca envie chaves privadas, credenciais, fontes privados ou dados pessoais. A linha atual é 0.3.x; não há promessa de backport ou prazo de resposta. Leia o [modelo de segurança](docs/pt-BR/security.md).
+Informe versão, plataforma, comando, comportamento esperado e observado, código de saída e reproducer sintético mínimo. Nunca envie chaves privadas, credenciais, fontes privados ou dados pessoais. A linha atual é 0.4.x; não há promessa de backport ou prazo de resposta. Leia o [modelo de segurança](docs/pt-BR/security.md).

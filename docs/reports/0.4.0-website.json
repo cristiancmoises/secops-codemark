@@ -1,0 +1,221 @@
+{
+  "format": "secops-codemark-website-validation-v1",
+  "version": "0.4.0",
+  "recorded_at_utc": "2026-10-16T03:58:44.923792+00:00",
+  "status": "local-preview-checks-passed",
+  "scope": {
+    "environment": "Local pre-release HTML/CSS preview generated in the qualified networkless source-read-only sandbox, then served on loopback to a fresh isolated Chromium profile.",
+    "preview_only": true,
+    "public_deployment_verified": false,
+    "release_downloads_staged": false,
+    "release_download_hashes_verified": false,
+    "complete_generated_link_check_performed": false,
+    "site_javascript_bytes": 0
+  },
+  "method": {
+    "browser": "Chrome/153.0.8010.47",
+    "browser_protocol": "1.3",
+    "browser_control": "Direct Chrome DevTools Protocol; Chrome DevTools MCP was unavailable in the session.",
+    "source_execution": "Site builder executed in the existing qualified networkless namespace runner; project source was mounted read-only. Browser used a new private profile with no existing authenticated sessions.",
+    "inspection": "Read-only DOM, computed styles, accessibility tree, page console and network events; native keyboard Tab and ArrowRight interactions.",
+    "screen_reader_or_full_wcag_certification": false
+  },
+  "generated_preview": {
+    "html_pages": 77,
+    "routes": [
+      "/",
+      "/en/",
+      "/en/docs/",
+      "/en/docs/cli/",
+      "/en/docs/encryption/",
+      "/en/docs/evidence/",
+      "/en/docs/getting-started/",
+      "/en/docs/integration/",
+      "/en/docs/integrity/",
+      "/en/docs/security-policy/",
+      "/en/docs/security/",
+      "/en/docs/signing/",
+      "/en/docs/traceability/",
+      "/en/docs/validation/",
+      "/en/downloads/",
+      "/en/evidence/",
+      "/en/reports/0.3.0-review/",
+      "/en/reports/0.3.0-self-test/",
+      "/en/reports/0.3.0-tests/",
+      "/en/reports/0.3.0-validation/",
+      "/en/reports/0.3.0-website/",
+      "/en/reports/0.4.0-review/",
+      "/en/reports/0.4.0-self-test/",
+      "/en/reports/0.4.0-tests/",
+      "/en/reports/0.4.0-validation/",
+      "/en/reports/PRODUCTION/",
+      "/en/reports/QUALIFICATION/",
+      "/en/reports/REVIEW_0.2.0/",
+      "/en/reports/VALIDATION/",
+      "/en/reports/integration-effort-template/",
+      "/en/reports/pipeline-results/",
+      "/en/reports/similarity-results/",
+      "/en/reports/similarity-review/",
+      "/en/wiki/",
+      "/en/wiki/architecture/",
+      "/en/wiki/contributing/",
+      "/en/wiki/cryptography/",
+      "/en/wiki/formats/",
+      "/en/wiki/troubleshooting/",
+      "/pt-br/",
+      "/pt-br/docs/",
+      "/pt-br/docs/cli/",
+      "/pt-br/docs/encryption/",
+      "/pt-br/docs/evidence/",
+      "/pt-br/docs/getting-started/",
+      "/pt-br/docs/integration/",
+      "/pt-br/docs/integrity/",
+      "/pt-br/docs/security-policy/",
+      "/pt-br/docs/security/",
+      "/pt-br/docs/signing/",
+      "/pt-br/docs/traceability/",
+      "/pt-br/docs/validation/",
+      "/pt-br/downloads/",
+      "/pt-br/evidence/",
+      "/pt-br/reports/0.3.0-review/",
+      "/pt-br/reports/0.3.0-self-test/",
+      "/pt-br/reports/0.3.0-tests/",
+      "/pt-br/reports/0.3.0-validation/",
+      "/pt-br/reports/0.3.0-website/",
+      "/pt-br/reports/0.4.0-review/",
+      "/pt-br/reports/0.4.0-self-test/",
+      "/pt-br/reports/0.4.0-tests/",
+      "/pt-br/reports/0.4.0-validation/",
+      "/pt-br/reports/PRODUCTION/",
+      "/pt-br/reports/QUALIFICATION/",
+      "/pt-br/reports/REVIEW_0.2.0/",
+      "/pt-br/reports/VALIDATION/",
+      "/pt-br/reports/integration-effort-template/",
+      "/pt-br/reports/pipeline-results/",
+      "/pt-br/reports/similarity-results/",
+      "/pt-br/reports/similarity-review/",
+      "/pt-br/wiki/",
+      "/pt-br/wiki/architecture/",
+      "/pt-br/wiki/contributing/",
+      "/pt-br/wiki/cryptography/",
+      "/pt-br/wiki/formats/",
+      "/pt-br/wiki/troubleshooting/"
+    ],
+    "release_metadata_sha256": "cfa552b4aaa50dd9240ea7ea556e7cf45039b01e77cc93b5a1630ed4041e5456",
+    "styles_css_sha256": "c04b16de8d89e994d09441720e68d349a04469cac28bfef4a4ab57e97e12229f",
+    "builder_sha256": "807a8feccb704d9936869e9c69723b5bf3f22c0fd260c58066711f7f1292d252"
+  },
+  "responsive_browser_checks": {
+    "result": "pass",
+    "viewport_case_count": 251,
+    "viewport_height_css_pixels": 1000,
+    "all_generated_pages_widths_css_pixels": [
+      320,
+      768,
+      1440
+    ],
+    "all_generated_pages_per_width": 77,
+    "additional_width_css_pixels": 1024,
+    "additional_current_report_home_evidence_routes": 20,
+    "issues": [],
+    "document_horizontal_overflow_cases": 0,
+    "unnamed_accessible_control_cases": 0,
+    "h1_count_failures": 0,
+    "site_script_elements": 0,
+    "inline_event_handlers": 0,
+    "javascript_links": 0,
+    "external_asset_references": 0,
+    "page_console_errors_or_warnings": 0,
+    "failed_page_network_responses": 0,
+    "external_page_requests": 0
+  },
+  "accessibility_samples": {
+    "text_contrast": {
+      "result": "pass",
+      "minimum_measured_ratio": 8.1474,
+      "normal_text_threshold": 4.5,
+      "large_text_threshold": 3.0,
+      "method": "Computed text colors against composited CSS ancestor backgrounds; conservative brightest parsed gradient stop. All viewport cases used prefers-reduced-motion: reduce.",
+      "unmeasured_gradient_cases": 0,
+      "limitations": "This sampled computed-color check does not certify every WCAG criterion, every visual state, assistive technology behavior, or other browser engines."
+    },
+    "keyboard": {
+      "result": "pass",
+      "sampled_routes": [
+        "/en/",
+        "/en/evidence/",
+        "/en/reports/similarity-review/",
+        "/en/reports/similarity-results/",
+        "/en/reports/pipeline-results/",
+        "/pt-br/",
+        "/pt-br/evidence/",
+        "/pt-br/reports/similarity-review/",
+        "/pt-br/reports/similarity-results/",
+        "/pt-br/reports/pipeline-results/"
+      ],
+      "viewport_width_css_pixels": 320,
+      "tab_positions_checked_per_route": 12,
+      "first_focus": "Localized Skip to content link targeting #main",
+      "visible_focus_outline": true,
+      "horizontal_scroll_checks": [
+        {
+          "path": "/en/reports/similarity-review/",
+          "selector": ".table-scroll",
+          "scroll_left_before": 0,
+          "scroll_left_after": 160,
+          "keyboard_horizontal_scroll": true
+        },
+        {
+          "path": "/en/reports/similarity-results/",
+          "selector": "pre",
+          "scroll_left_before": 0,
+          "scroll_left_after": 160,
+          "keyboard_horizontal_scroll": true
+        },
+        {
+          "path": "/pt-br/reports/similarity-review/",
+          "selector": ".table-scroll",
+          "scroll_left_before": 0,
+          "scroll_left_after": 160,
+          "keyboard_horizontal_scroll": true
+        },
+        {
+          "path": "/pt-br/reports/similarity-results/",
+          "selector": "pre",
+          "scroll_left_before": 0,
+          "scroll_left_after": 160,
+          "keyboard_horizontal_scroll": true
+        }
+      ]
+    },
+    "motion": {
+      "result": "pass",
+      "reduced_motion": "No active computed CSS animations across all 251 viewport cases.",
+      "default_animations": [
+        {
+          "name": "title-arrive",
+          "duration": "1.1s",
+          "iterations": "1"
+        },
+        {
+          "name": "trace",
+          "duration": "1.4s",
+          "iterations": "1"
+        }
+      ],
+      "default_animation_iterations": "One iteration; no perpetual animation."
+    }
+  },
+  "visual_review": {
+    "screenshots_captured": 10,
+    "reviewed": "Desktop English homepage, mobile Portuguese evidence page, English/Portuguese report layouts, raw pipeline JSON, and mobile horizontally scrollable comparison table.",
+    "result": "No release-blocking layout finding in the local preview. Colored cyan/violet/mint/amber accents remain readable on dark surfaces."
+  },
+  "limits": [
+    "This is local preview evidence. The live site, deployment headers, TLS and public artifact availability were not verified.",
+    "Release downloads were not staged in this preview. The final generated-link and download-file checksum gate is pending the release owner’s frozen final output.",
+    "Runtime test counts, benchmark values and release qualification are supplied by their own reports; this browser review does not qualify those results.",
+    "Raw reports preserve their original source language and formats within the bilingual navigation and explanatory notices.",
+    "Chromium was tested; Firefox, Safari, physical mobile devices and a manual screen-reader session were not tested."
+  ]
+}

@@ -1,6 +1,6 @@
 # Contribute
 
-Contributions should keep CodeMark local, bounded, understandable, and dependency-light. Read the repository [contribution guide](../../../CONTRIBUTING.md) and [security policy](../../../SECURITY.md).
+Contributions should keep SecOps Codemark local, bounded, understandable, and dependency-light. Read the repository [contribution guide](../../../CONTRIBUTING.md) and [security policy](../../../SECURITY.md).
 
 ## Development loop
 
@@ -29,4 +29,4 @@ Do not publish private task prompts, execution instructions, credentials, privat
 
 ## License
 
-CodeMark is GPL-3.0-or-later. Contributions must be compatible with that license. Preserve existing notices and describe the origin and license of any imported material.
+SecOps Codemark is GPL-3.0-or-later. Contributions must be compatible with that license. Preserve existing notices and describe the origin and license of any imported material.

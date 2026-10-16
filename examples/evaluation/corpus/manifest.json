@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "frozen_before_scores_at_utc": "2026-10-16T03:36:29.754767+00:00",
+  "license": "GPL-3.0-or-later",
+  "language": "Python",
+  "scope_reason": "All three pinned tools support Python; one shared language limits tokenizer/language confounding. This is not multilingual qualification.",
+  "reference": "reference/original/program.py",
+  "cases": [
+    {
+      "id": "exact",
+      "path": "candidates/exact/program.py",
+      "expected": "derived-copy",
+      "derived_from_reference": true,
+      "construction": "byte-identical reference"
+    },
+    {
+      "id": "identifier-rename",
+      "path": "candidates/identifier-rename/program.py",
+      "expected": "derived-copy",
+      "derived_from_reference": true,
+      "construction": "identifier tokens renamed; literals and operations retained"
+    },
+    {
+      "id": "format-comments",
+      "path": "candidates/format-comments/program.py",
+      "expected": "derived-copy",
+      "derived_from_reference": true,
+      "construction": "formatting/quote layout and comments changed via Python AST unparse"
+    },
+    {
+      "id": "block-reorder",
+      "path": "candidates/block-reorder/program.py",
+      "expected": "derived-copy",
+      "derived_from_reference": true,
+      "construction": "whole original functions reordered with their source bytes retained"
+    },
+    {
+      "id": "partial-overlap",
+      "path": "candidates/partial-overlap/program.py",
+      "expected": "derived-partial-copy",
+      "derived_from_reference": true,
+      "construction": "only allocate_shipping retained; independent run-compression helper added"
+    },
+    {
+      "id": "control-same-domain",
+      "path": "candidates/control-same-domain/program.py",
+      "expected": "independent-control",
+      "derived_from_reference": false,
+      "construction": "separately authored basket/packing code, same broad order domain"
+    },
+    {
+      "id": "control-unrelated",
+      "path": "candidates/control-unrelated/program.py",
+      "expected": "independent-control",
+      "derived_from_reference": false,
+      "construction": "separately authored maze search, unrelated domain"
+    }
+  ],
+  "files": {
+    "candidates/block-reorder/program.py": {
+      "sha256": "663377278e98b2180d85c9b7fd16eb907d4eb7f9d7e9738af230b05ba4466953",
+      "bytes": 1612,
+      "codemark_tokens": 281,
+      "codemark_sketch_entries": 233
+    },
+    "candidates/control-same-domain/program.py": {
+      "sha256": "30659a0709397d1232a4ea36a1b26e99f14cfa3076c0ae2f7a733d01795b2f4a",
+      "bytes": 1234,
+      "codemark_tokens": 244,
+      "codemark_sketch_entries": 203
+    },
+    "candidates/control-unrelated/program.py": {
+      "sha256": "4b4a165dee6b7d179f0a23f6e60b3d26a869d7cecb9739d8a461d5105d0c9e02",
+      "bytes": 947,
+      "codemark_tokens": 179,
+      "codemark_sketch_entries": 165
+    },
+    "candidates/exact/program.py": {
+      "sha256": "43942fd1ca44132f88a53fae1f734afaabf6d6229bba50f27cbfc5b118e04b1a",
+      "bytes": 1612,
+      "codemark_tokens": 281,
+      "codemark_sketch_entries": 232
+    },
+    "candidates/format-comments/program.py": {
+      "sha256": "1c0b4b2abe1837f61b80e04a26a0dfb75f18e198b317f029522bfc9bf8e5a200",
+      "bytes": 1687,
+      "codemark_tokens": 285,
+      "codemark_sketch_entries": 237
+    },
+    "candidates/identifier-rename/program.py": {
+      "sha256": "76f11c99da04b6fb992fd3c9d7894942539194e58ede1e23fce91b8fc8c26210",
+      "bytes": 1688,
+      "codemark_tokens": 281,
+      "codemark_sketch_entries": 232
+    },
+    "candidates/partial-overlap/program.py": {
+      "sha256": "6fd7930ec89800ccfecbab49cb9b5b719f8a79b20dca3b836e9725aa49f8769b",
+      "bytes": 1048,
+      "codemark_tokens": 178,
+      "codemark_sketch_entries": 156
+    },
+    "reference/original/program.py": {
+      "sha256": "43942fd1ca44132f88a53fae1f734afaabf6d6229bba50f27cbfc5b118e04b1a",
+      "bytes": 1612,
+      "codemark_tokens": 281,
+      "codemark_sketch_entries": 232
+    }
+  },
+  "settings": {
+    "repeats": 2,
+    "illustrative_observation_threshold": 0.65,
+    "codemark": {
+      "threshold": 1e-09,
+      "watermarks": "Reference copy marked only; candidate sources never receive marks.",
+      "sensitivity": "Unchanged lexical normalization, five-token shingles, up to256 hashes, minimum40tokens/eight sketches."
+    },
+    "copydetect": {
+      "version": "0.5.0",
+      "noise_t": 25,
+      "guarantee_t": 25,
+      "display_t": 0.33,
+      "filtering": true,
+      "score": "Both directional similarity_matrix fractions, their arithmetic mean only for the illustrative observation. No HTML display filtering applied."
+    },
+    "jplag": {
+      "version": "6.3.0",
+      "jar_sha256": "5f2c21e8b88ed77134effcb3a5a3ab13d188f6a3e16d401387f7479e92db9aa2",
+      "language": "python3",
+      "mode": "RUN",
+      "minimum_matching_tokens": "Python language default; no -t override",
+      "similarity_threshold": 0.0,
+      "normalization": "native default; --normalize not enabled",
+      "score": "Native average similarity, with native minimum/maximum when exported."
+    }
+  },
+  "limits": [
+    "Seven synthetic candidates, five derived positives and two independent controls are too small for general tool rankings.",
+    "A partial known copy may fall below an illustrative threshold; that remains a miss on this fixture.",
+    "Scores use different units and meanings; a common0.65 is observational, not calibrated or a shared default.",
+    "No corpus or sensitivity changes after the first scores. Adapter corrections must preserve the original raw outputs."
+  ]
+}

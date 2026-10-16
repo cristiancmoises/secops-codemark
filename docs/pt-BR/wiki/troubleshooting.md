@@ -1,35 +1,43 @@
 # Resolver problemas
 
-## A verificação retorna 1
+## A árvore está íntegra, mas não autenticada
 
-Leia `changed`, `missing`, `untracked` e `invalid_marks` no relatório JSON. Compare com a revisão pretendida. Se as mudanças forem legítimas, revise antes de gerar e assinar uma referência. Preserve a evidência anterior se forem inesperadas.
+Sem dois fingerprints híbridos, a verificação confere apenas a referência local. Use `audit` com fingerprints completos ML-DSA-87 e Ed25519 confiáveis por canal independente. Chave embutida não é referência independente.
 
-## A comparação retorna 1
+## A integridade retorna 1
 
-O código 1 indica candidatos encontrados. Leia o método e inspecione os arquivos. Boilerplate compartilhado e código independente podem produzir candidatos enganosos. O código de saída não conclui plágio.
+Leia arquivos alterados, ausentes, novos e modos alterados no JSON. Compare com a revisão pretendida. Revise mudanças legítimas antes de gerar e assinar snapshot; preserve evidências se forem inesperadas.
 
-## Um arquivo não foi marcado
+## Uma cadeia válida falha no checkpoint
 
-Leia `skipped` com `--json`. Confira extensão, encoding, tamanho, prologue, caminho de dependência e formato assinado. Escolha um módulo próprio menor se a operação chegar ao teto de recursos.
+O checkpoint esperado identifica o último registro exato, não qualquer ancestral. A divergência pode indicar rollback, substituição ou registro novo legítimo ainda não aprovado na referência confiável. Investigue e atualize o checkpoint apenas após revisão. Não remova a verificação para fazer uma falha inexplicada passar.
+
+## O OpenSSL não assina
+
+Confira `doctor --json` e a versão nativa do OpenSSL. O modo híbrido exige OpenSSL 3.5 com provider padrão e PEM ML-DSA-87 e Ed25519. Uma chave privada OpenSSH usa formato diferente.
+
+A assinatura não é interativa. Chaves criptografadas exigem a mesma senha num `--passphrase-file` protegido. Arquivos ausentes, incorretos ou alterados falham; nenhum backend mais fraco é substituído automaticamente.
+
+## Opções legadas são recusadas
+
+Se `integrity.json` existe, `verify` usa todos os arquivos. Opções legadas GPG/OpenSSH autenticam só `manifest.json` da marcação. Escolha fluxo e referência apropriados; uma assinatura de fontes não autentica binários e outros dados do snapshot.
+
+## Um arquivo é ignorado ou recusado
+
+Na marcação, leia `skipped`, formato, encoding, prologue, dependências e tetos. No snapshot, leia `excluded` e os limites próprios. Links, especiais e races detectadas são recusados em vez de incluídos silenciosamente.
+
+## O bundle falha no destinatário
+
+Calcule o hash do arquivo público Zupt inteiro e confira o fingerprint completo por canal confiável. Ele é diferente do DER SPKI da assinatura. Mantenha privadas fora da árvore e use destino novo externo. Veja [Criptografia](../encryption.md).
 
 ## O relatório não pode ser gravado
 
-`--output` precisa de arquivo novo em diretório existente e gravável, externo às árvores. Nunca sobrescreve relatório existente. Espere o processo terminar antes de consumir a saída. Confira espaço e permissões sem apagar evidências anteriores.
-
-## A assinatura não confere
-
-Confira fingerprint completo, origem da chave pública, manifesto atual e backend. OpenSSH exige Ed25519 e namespace esperado. GPG exige três opções juntas: `--require-signature`, `--keyring` e `--fingerprint`.
-
-Atualizar legitimamente o manifesto invalida a assinatura anterior. Assine a nova referência revisada. Não substitua a chave confiável apenas para fazer uma verificação passar.
+`--output` precisa de arquivo novo em pasta existente e gravável, externa às árvores. Espere o término antes de consumir. Preserve evidências anteriores e confira permissões e espaço.
 
 ## Uma trava permaneceu
 
-Confirme que nenhuma operação CodeMark está ativa antes de remover `.codemark/lock`. Confira a árvore contra Git ou backup após uma interrupção forçada. Rollback comum não oferece recuperação de queda de energia.
-
-## GUI ou ferramenta opcional indisponível
-
-Execute `doctor --json`. A GUI precisa de Tkinter e sessão gráfica. OpenSSH precisa de `ssh-keygen` com `-Y`; GPG precisa dos executáveis e agente local funcional. A CLI funciona sem GUI. Um `skip` registra cobertura ausente.
+Confirme que não há operação ativa antes de remover `.codemark/lock`. Compare árvore com Git ou backup após interrupção forçada. Rollback comum não recupera queda de energia.
 
 ## Pedir ajuda
 
-Informe versões de CodeMark e Python, sistema operacional, comando exato, código de saída e um reproducer sintético pequeno. Oculte caminhos privados. Use a [política de segurança](../../../SECURITY.md) para falhas sensíveis.
+Informe versões, plataforma, comando, código de saída e reproducer sintético. Oculte caminhos privados e nunca anexe chaves secretas ou senha. Use a [política de segurança](../../../SECURITY.md) para falhas sensíveis.

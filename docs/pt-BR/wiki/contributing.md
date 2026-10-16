@@ -1,6 +1,6 @@
 # Contribuir
 
-As contribuições devem manter CodeMark local, limitado, compreensível e com poucas dependências. Leia o [guia de contribuição](../../../CONTRIBUTING.md) e a [política de segurança](../../../SECURITY.md).
+As contribuições devem manter SecOps Codemark local, limitado, compreensível e com poucas dependências. Leia o [guia de contribuição](../../../CONTRIBUTING.md) e a [política de segurança](../../../SECURITY.md).
 
 ## Ciclo de desenvolvimento
 
@@ -29,4 +29,4 @@ Não publique prompts privados, instruções de execução, credenciais, histór
 
 ## Licença
 
-CodeMark usa GPL-3.0-or-later. Contribuições precisam ser compatíveis com ela. Preserve avisos existentes e descreva origem e licença de material importado.
+SecOps Codemark usa GPL-3.0-or-later. Contribuições precisam ser compatíveis com ela. Preserve avisos existentes e descreva origem e licença de material importado.

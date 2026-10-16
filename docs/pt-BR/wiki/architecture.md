@@ -1,38 +1,48 @@
 # Arquitetura
 
-CodeMark separa tratamento dos fontes, comparação, orquestração da CLI, assinaturas opcionais e interface gráfica opcional. A implementação usa a biblioteca padrão do Python.
+SecOps Codemark separa comentários, inventário completo, atestação criptográfica, orquestração e exportação privada opcional. O Python básico usa biblioteca padrão. OpenSSL e Zupt nativos realizam suas operações criptográficas opcionais.
 
-## Módulos
+## Componentes e limites
 
-| Módulo | Responsabilidade |
+| Componente | Responsabilidade |
 | --- | --- |
-| `codemark/core.py` | Inventários limitados, marcas, manifestos, verificação, alterações e rollback |
-| `codemark/fingerprint.py` | Fingerprints de tokens normalizados e similaridade |
-| `codemark/cli.py` | Argumentos, relatórios, códigos de saída e despacho |
-| `codemark/ssh_signing.py` | Assinaturas Ed25519 OpenSSH e verificação fixada |
-| `codemark/signing.py` | OpenPGP opcional e keyring dedicado |
+| `codemark/core.py` | Fontes, comentários, manifestos legados, alterações limitadas e rollback |
+| `codemark/integrity.py` | SHA-256/SHA-512 em blocos de regulares e comparação |
+| `codemark/pq_signing.py` | Registros canônicos, ML-DSA-87/Ed25519 no OpenSSL e verificação da cadeia |
+| `codemark/fingerprint.py` | Sketches normalizados de tokens e similaridade |
+| `codemark/cli.py` | Argumentos, relatórios, seleção de modos e códigos de saída |
+| `codemark/ssh_signing.py` | Assinatura legada OpenSSH do manifesto de fontes |
+| `codemark/signing.py` | Assinatura legada OpenPGP do manifesto de fontes |
+| Comando bundle | Exportação explícita de regulares criptografada por destinatário Zupt |
 | `codemark/selftest.py` | Fixtures temporárias e ausências explícitas |
-| `codemark/gui.py` | Interface Tkinter opcional |
+| `codemark/gui.py` | Fluxo opcional Tkinter de comentários |
 
-## Fluxo de dados
+## Fluxo de integridade
 
 ```text
-Árvore própria selecionada
-  -> inventário limitado de fontes
-  -> prévia ou comentário reversível de procedência
-  -> manifesto SHA-256 e sketches de tokens
-  -> assinatura opcional com chave existente
+Árvore estável selecionada
+  -> hashes em blocos dos regulares e exclusões explícitas
+  -> bytes exatos de integrity.json
+  -> registro canônico com os dois digests do snapshot
+  -> assinaturas obrigatórias ML-DSA-87 e Ed25519
+  -> histórico encadeado attestations.json
 
-Referência salva + árvore atual -> relatório de integridade
-Referência salva + árvore suspeita -> relatório de candidatos
+Árvore atual + snapshot + histórico
+  + dois fingerprints independentes confiáveis
+  + checkpoint esperado mais recente opcional e independente
+  -> relatório de integridade e autenticação
 ```
 
-A comparação lê fontes suspeitos como dados. Não os executa. O autoteste executa somente suas próprias fixtures temporárias.
+`verify` escolhe o snapshot quando presente e pode conferir integridade sem autenticação se não houver chaves fixadas. `audit` exige snapshot, histórico e dois fingerprints. Assinaturas legadas do manifesto de fontes não autenticam o snapshot completo.
 
-## Limite de confiança
+## Outros fluxos
 
-Um manifesto sem assinatura é uma referência local. A autenticação precisa de chave pública confiável separada e fingerprint fixado. O operador controla máquina, revisão, chaves e CI.
+A marcação insere comentários removíveis somente em formatos de fontes próprios cobertos. A comparação lê fontes como dados e produz candidatos; não os executa. O autoteste só executa suas fixtures.
 
-O projeto não tem backend hospedado em runtime. Este site de documentação é HTML e CSS pré-gerados, sem JavaScript, analytics, fontes externas ou requisições de assets de terceiros.
+Bundles privados exportam a árvore de regulares pelo Zupt, incluindo VCS e `.codemark`. Têm destinatário e destino explícitos e são separados da distribuição pública sem criptografia.
 
-Veja [formatos](formats.md) para armazenamento e [segurança](../security.md) para limites.
+## Confiança local
+
+O operador controla host, árvore estável, verificador, chaves privadas, fingerprints, destinatário e checkpoint esperado. Horários locais não criam autoridade externa de timestamp. Veja [Criptografia](cryptography.md) e [Segurança](../security.md).
+
+O site é HTML/CSS/SVG pré-gerado, sem JavaScript, analytics, fontes remotas ou backend de aplicação hospedado.

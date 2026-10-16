@@ -1,4 +1,4 @@
-# CodeMark static website
+# SecOps Codemark static website
 
 The production origin is `https://codemark.securityops.co`. The site is prebuilt HTML and CSS with local SVG assets. It has no JavaScript, analytics, external font requests, npm packages, or runtime service dependency.
 
@@ -40,7 +40,7 @@ The metadata contract is:
 
 ```json
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "date": "YYYY-MM-DD",
   "commit": "source revision or immutable release reference",
   "site_url": "https://codemark.securityops.co",
@@ -49,8 +49,11 @@ The metadata contract is:
   "repositories": [{"label": "Repository", "url": "https://example.org/project"}],
   "checks": [{"name": "Check", "status": "pending", "detail": "Exact scope", "command": "optional command"}],
   "metrics": [{"label": "Metric", "value": "Measured value", "detail": "Measurement boundary"}],
-  "reports": [{"title": "Report", "path": "docs/reports/report.json", "date": "YYYY-MM-DD", "scope": "Exact scope", "status": "current"}],
-  "downloads": [{"label": "Portable", "url": "/downloads/codemark.pyz", "path": "dist/codemark.pyz"}]
+  "reports": [{"title": "Report", "path": "docs/reports/0.4.0-validation.json", "date": "YYYY-MM-DD", "scope": "Exact scope", "status": "current"}],
+  "downloads": [
+    {"label": "Portable", "url": "/downloads/codemark.pyz", "path": "dist/codemark.pyz"},
+    {"label": "0.4.0 source", "url": "/downloads/secops-codemark-0.4.0.zupt", "path": "dist/secops-codemark-0.4.0.zupt"}
+  ]
 }
 ```
 

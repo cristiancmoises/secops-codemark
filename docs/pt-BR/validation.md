@@ -8,6 +8,8 @@ A página de Evidências do site é gerada por `website/data/release.json`. Resu
 
 Não reutilize contagens ou qualificação de uma versão anterior como evidência de fontes modificados. Ausências opcionais continuam visíveis. Revisão por agente é identificada como tal e não afirma auditoria profissional externa ou certificação.
 
+A versão 0.4.0 adiciona snapshots de regulares, atestações ML-DSA-87 + Ed25519, histórico encadeado e bundles privados explicitamente criptografados. Testes, providers nativos, plataformas e artefatos precisam ser medidos para estes fontes; contagens anteriores não são transferidas.
+
 ## Reproduzir localmente
 
 ```sh
@@ -21,9 +23,21 @@ Use as dependências reais do build e leia erros de ferramentas ausentes. Execut
 
 ## O que os testes exercitam
 
-O repositório tem testes de marcação reversível, divergências de integridade, comparação de tokens, prologues e preservação de bytes, validação de metadados, falhas de relatórios, CLI, limites, isolamento de pacote e backends de assinatura.
+O repositório tem testes de comentários reversíveis, bytes, candidatos de tokens, metadados e falhas de relatórios, inventário completo, tetos, isolamento, assinaturas híbridas, chaves fixadas e histórico encadeado. Consulte os logs atuais para casos executados, versões e ausências. Exportação privada e plataformas precisam de registros próprios.
 
 O autoteste cria fixtures temporárias e chaves efêmeras. Executa linguagens apenas quando suas ferramentas estão disponíveis. Não exercita projetos arbitrários, todas as linguagens, sistema operacional hostil, renderização da GUI ou alegações jurídicas.
+
+## Registro histórico da 0.3.0
+
+Estes registros valem para a versão 0.3.0 e têm data de **2026-10-16 UTC**. A qualificação registrada cobre a CLI local GNU/Linux; Windows e renderização da GUI foram excluídos. Os arquivos permanecem inalterados como evidência histórica.
+
+- [JSON de qualificação](../reports/0.3.0-validation.json)
+- [Log completo dos testes](../reports/0.3.0-tests.txt)
+- [Verificações portáteis](../reports/0.3.0-self-test.json)
+- [Revisão focal dos fontes e empacotamento](../reports/0.3.0-review.md)
+- [Validação do site](../reports/0.3.0-website.json)
+
+O registro 0.3.0 relata 81 testes GNU/Linux e nove verificações portáteis. Os resultados valem para os fontes e o ambiente originais, não para os fontes alterados da 0.4.0.
 
 ## Registro histórico da 0.2.0
 

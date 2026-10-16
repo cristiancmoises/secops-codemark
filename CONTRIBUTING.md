@@ -1,6 +1,6 @@
-# Contributing to CodeMark
+# Contributing to SecOps Codemark
 
-Use Python 3.10 or newer. Runtime code uses the standard library; signing and the GUI are optional system integrations. Prefer small, reviewable changes with a synthetic reproducer for defects.
+Use Python 3.10 or newer. Base runtime code uses the standard library; hybrid signing requires OpenSSL 3.5+, encrypted bundles require native Zupt 5.2.10+, and the GUI is optional. Preserve the mandatory dual-signature policy, independent key pins, exact snapshot-byte binding and expected-checkpoint checks. Prefer small, reviewable changes with a synthetic reproducer for defects.
 
 ## Validate a change
 

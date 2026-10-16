@@ -1,0 +1,8 @@
+phase,activity,started_utc,finished_utc,active_minutes,ci_seconds,failures,notes
+onboarding,verify portable checksum and install crypto prerequisites,,,,,,
+onboarding,configure artifact retrieval and six protected settings,,,,,,
+onboarding,validate first authentic release and deliberate tamper failure,,,,,,
+release,review changes and run application tests,,,,,,
+release,snapshot sign and independently advance checkpoint,,,,,,
+maintenance,rotate keys and update both protected fingerprints,,,,,,
+maintenance,upgrade native tools and repeat rejection checks,,,,,,

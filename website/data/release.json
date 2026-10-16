@@ -1,76 +1,98 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "date": "2026-10-16",
-  "commit": "v0.3.0",
+  "commit": "v0.4.0",
   "site_url": "https://codemark.securityops.co",
   "status": "qualified-with-scope",
   "scope": {
-    "en": "Qualified local GNU/Linux CLI: reversible marking, integrity, similarity, and GPG/OpenSSH signing. 81 tests and 9 portable smoke checks passed. Windows and GUI rendering require separate validation.",
-    "pt-br": "CLI local qualificada em GNU/Linux: marcação reversível, integridade, similaridade e assinaturas GPG/OpenSSH. Passaram 81 testes e 9 verificações portáteis. Windows e renderização da GUI exigem validação própria."
+    "en": "0.4.0: qualified all-regular-file inventories, dual ML-DSA-87/Ed25519 attestations, external checkpoints and recipient-encrypted exports. Reports identify exact revisions, measured fixtures and platform limits. Final release CI and artifact receipts are linked from the repository release.",
+    "pt-br": "0.4.0: inventários de todos os regulares, atestações ML-DSA-87/Ed25519, checkpoints externos e exportações criptografadas verificados. Os relatórios identificam revisões, fixtures medidas e limites de plataforma. CI final e verificação dos pacotes estão vinculados ao lançamento no repositório."
   },
   "repositories": [
     {
       "label": "GitHub",
-      "url": "https://github.com/cristiancmoises/codemark"
+      "url": "https://github.com/cristiancmoises/secops-codemark"
     },
     {
       "label": "Codeberg",
-      "url": "https://codeberg.org/berkeley/codemark"
+      "url": "https://codeberg.org/berkeley/secops-codemark"
     },
     {
       "label": "Forgejo · securityops.co",
-      "url": "https://git.securityops.co/cristiancmoises/codemark"
+      "url": "https://git.securityops.co/cristiancmoises/secops-codemark"
     },
     {
       "label": "Forgejo · securityops.com.br",
-      "url": "https://git.securityops.com.br/cristiancmoises/codemark"
+      "url": "https://git.securityops.com.br/cristiancmoises/secops-codemark"
     }
   ],
   "checks": [
     {
       "name": {
-        "en": "Unit and integration tests",
-        "pt-br": "Testes unitários e de integração"
+        "en": "All-file integrity",
+        "pt-br": "Integridade de todos os regulares"
       },
       "status": "pass",
       "detail": {
-        "en": "81 tests passed; 0 failures, 0 errors, 0 skips. Real GPG and Ed25519 fixture keys.",
-        "pt-br": "81 testes passaram; 0 falhas, 0 erros e 0 ausências. Chaves temporárias reais GPG e Ed25519."
+        "en": "GNU/Linux: 175 tests passed, zero skipped. Coverage includes extensionless files, JSON, documentation, binaries and streamed ISO fixtures.",
+        "pt-br": "GNU/Linux: 175 testes passaram, sem ignorados. Cobertura inclui arquivos sem extensão, JSON, documentação, binários e fixtures ISO lidas em blocos."
       },
       "command": "python3 -m unittest discover -s tests -v"
     },
     {
       "name": {
-        "en": "Portable smoke checks",
+        "en": "Hybrid authentication and history",
+        "pt-br": "Autenticação híbrida e histórico"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Real OpenSSL 3.5.7: both ML-DSA-87 and Ed25519 signatures, independent pins, tampering, key rotation, history and rollback checkpoints passed.",
+        "pt-br": "OpenSSL 3.5.7 real: ambas as assinaturas, chaves independentes, adulteração, rotação, histórico e checkpoints passaram."
+      }
+    },
+    {
+      "name": {
+        "en": "Private encrypted export",
+        "pt-br": "Exportação privada criptografada"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Native Zupt 5.2.10 encryption, recipient pins and exact restored bytes passed, including wrong-key, tamper, race and rollback rejection tests.",
+        "pt-br": "Criptografia Zupt 5.2.10, destinatários fixados e bytes restaurados passaram, incluindo rejeição de chave incorreta, adulteração, races e rollback."
+      }
+    },
+    {
+      "name": {
+        "en": "Linux and Windows CI",
+        "pt-br": "CI Linux e Windows"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Six jobs: Linux and Windows with Python 3.10, 3.12 and 3.14. Native optional-provider qualification is recorded separately. The final release requires its own passing complete-source matrix.",
+        "pt-br": "Seis jobs: Linux e Windows com Python 3.10, 3.12 e 3.14. Providers nativos opcionais têm qualificação separada. O lançamento exige sua própria matriz aprovada dos fontes completos."
+      }
+    },
+    {
+      "name": {
+        "en": "Portable checks",
         "pt-br": "Verificações portáteis"
       },
       "status": "pass",
       "detail": {
-        "en": "9/9 checks passed, including Python, Node, Guile, tampering, signing and byte-preserving removal.",
-        "pt-br": "9/9 verificações passaram, incluindo Python, Node, Guile, adulteração, assinatura e remoção com bytes preservados."
+        "en": "Rebuilt portable passed 11 isolated smoke checks outside the source tree, including full-file integrity and real hybrid authentication.",
+        "pt-br": "Portátil reconstruído passou em 11 verificações isoladas fora dos fontes, incluindo integridade completa e autenticação híbrida real."
       },
       "command": "python3 -I codemark.pyz self-test --json"
     },
     {
       "name": {
-        "en": "Focused source review",
-        "pt-br": "Revisão focal do código"
+        "en": "Source review and static checks",
+        "pt-br": "Revisão e verificações estáticas"
       },
       "status": "pass",
       "detail": {
-        "en": "Separate reviewer approved core and packaging after the fixes; no blocking findings in that scope.",
-        "pt-br": "Revisor separado aprovou núcleo e empacotamento após as correções; nenhum bloqueador nesse escopo."
-      }
-    },
-    {
-      "name": {
-        "en": "Static checks",
-        "pt-br": "Verificações estáticas"
-      },
-      "status": "pass",
-      "detail": {
-        "en": "Ruff, formatting and Pyright passed for all Python source, site builder and tests.",
-        "pt-br": "Ruff, formatação e Pyright passaram para todos os fontes Python, gerador do site e testes."
+        "en": "Focused source review and regressions completed; Ruff, formatting, Pyright and selected-source secret scan passed. No independent external audit is claimed.",
+        "pt-br": "Revisão focal e regressões concluídas; Ruff, formatação, Pyright e varredura limitada dos fontes passaram. Não representa auditoria externa independente."
       }
     },
     {
@@ -80,20 +102,20 @@
       },
       "status": "pass",
       "detail": {
-        "en": "All generated HTML documents and local links passed. Chromium checked 20 page/viewport combinations, keyboard focus, motion preferences and zero scripts.",
-        "pt-br": "Todos os documentos HTML e links locais passaram. O Chromium verificou 20 combinações de página/tela, foco pelo teclado, preferência de movimento e ausência de scripts."
+        "en": "Local preview passed 251 viewport cases and keyboard/contrast checks. Final downloads, generated links and public availability are separate gates.",
+        "pt-br": "Prévia local passou em 251 casos de viewport e verificações de teclado/contraste. Downloads finais, links e disponibilidade pública são etapas separadas."
       },
       "command": "python3 scripts/build_site.py --check"
     },
     {
       "name": {
-        "en": "Release archive",
-        "pt-br": "Pacote da versão"
+        "en": "Public release archive",
+        "pt-br": "Pacote público da versão"
       },
       "status": "pass",
       "detail": {
-        "en": "Genuine unencrypted ZUPT passed integrity, extraction and source-byte comparison. Publication repeats comparison against the annotated tag.",
-        "pt-br": "O ZUPT genuíno e sem criptografia passou em integridade, extração e comparação dos bytes. A publicação repete a comparação contra a tag anotada."
+        "en": "Publication requires a genuine unencrypted .zupt, zupt test, SHA-256 checksums and extracted-byte comparison against the annotated tag. Zupt 5.2.10 does not restore POSIX modes.",
+        "pt-br": "Publicação exige .zupt genuíno sem criptografia, zupt test, SHA-256 e comparação dos bytes extraídos com a tag anotada. Zupt 5.2.10 não restaura permissões POSIX."
       },
       "command": "python3 scripts/build.py --output dist --archive"
     }
@@ -101,24 +123,24 @@
   "metrics": [
     {
       "label": {
-        "en": "Tests passed",
-        "pt-br": "Testes aprovados"
+        "en": "Current tests",
+        "pt-br": "Testes atuais"
       },
-      "value": "81",
+      "value": "175",
       "detail": {
-        "en": "Current run, zero skips.",
-        "pt-br": "Execução atual, sem testes ignorados."
+        "en": "GNU/Linux: zero failed or skipped; platform CI recorded separately.",
+        "pt-br": "GNU/Linux: sem falhas ou ignorados; CI por plataforma registrada separadamente."
       }
     },
     {
       "label": {
-        "en": "Smoke checks",
-        "pt-br": "Verificações portáteis"
+        "en": "Hybrid signatures",
+        "pt-br": "Assinaturas híbridas"
       },
-      "value": "9/9",
+      "value": "2",
       "detail": {
-        "en": "Isolated fixtures and temporary keys.",
-        "pt-br": "Fixtures isoladas e chaves temporárias."
+        "en": "ML-DSA-87 and Ed25519 are both mandatory.",
+        "pt-br": "ML-DSA-87 e Ed25519 são ambas obrigatórias."
       }
     },
     {
@@ -128,8 +150,8 @@
       },
       "value": "0",
       "detail": {
-        "en": "Python standard library at runtime.",
-        "pt-br": "Biblioteca padrão do Python em execução."
+        "en": "Base Python uses the standard library; OpenSSL and Zupt are optional native requirements.",
+        "pt-br": "Python básico usa biblioteca padrão; OpenSSL e Zupt são requisitos nativos opcionais."
       }
     },
     {
@@ -139,76 +161,193 @@
       },
       "value": "0 B",
       "detail": {
-        "en": "Static HTML, CSS and local SVG.",
-        "pt-br": "HTML estático, CSS e SVG local."
+        "en": "HTML, CSS and local SVG; no tracking or external fonts.",
+        "pt-br": "HTML, CSS e SVG locais; sem rastreamento ou fontes externas."
       }
     }
   ],
   "reports": [
     {
       "title": {
-        "en": "0.3.0 qualification",
-        "pt-br": "Qualificação 0.3.0"
+        "en": "0.4.0 qualification",
+        "pt-br": "Qualificação 0.4.0"
+      },
+      "path": "docs/reports/0.4.0-validation.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.0 complete test log",
+        "pt-br": "Log completo dos testes 0.4.0"
+      },
+      "path": "docs/reports/0.4.0-tests.txt",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.0 portable checks",
+        "pt-br": "Verificações portáteis 0.4.0"
+      },
+      "path": "docs/reports/0.4.0-self-test.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Eleven isolated checks of the qualified portable; exact artifact hash in the qualification report.",
+        "pt-br": "Onze verificações isoladas do portátil qualificado; hash exato no relatório de qualificação."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.0 focused security review",
+        "pt-br": "Revisão de segurança 0.4.0"
+      },
+      "path": "docs/reports/0.4.0-review.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.0 website preview validation",
+        "pt-br": "Validação da prévia do site 0.4.0"
+      },
+      "path": "docs/reports/0.4.0-website.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Local preview: 251 viewport cases over 77 pages; keyboard, contrast and reduced motion. Downloads and live deployment verified separately.",
+        "pt-br": "Prévia local: 251 casos de viewport em 77 páginas; teclado, contraste e movimento reduzido. Downloads e publicação verificados separadamente."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "Similarity comparison: method and limits",
+        "pt-br": "Comparação de similaridade: método e limites"
+      },
+      "path": "docs/reports/0.4.0/similarity-review.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
+        "pt-br": "Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "Similarity comparison: raw results",
+        "pt-br": "Comparação de similaridade: resultados brutos"
+      },
+      "path": "docs/reports/0.4.0/similarity-results.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
+        "pt-br": "Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "Integration effort worksheet",
+        "pt-br": "Planilha de esforço de integração"
+      },
+      "path": "docs/reports/0.4.0/integration-effort-template.csv",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Blank worksheet for operator observations; no human setup time is claimed.",
+        "pt-br": "Planilha em branco para observações do operador; não afirma tempo humano de implantação."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "Reproducible pipeline measurements",
+        "pt-br": "Medições reproduzíveis do pipeline"
+      },
+      "path": "docs/reports/0.4.0/pipeline-results.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Five local repeats on a 2,097,184-byte fixture; raw samples, hashes and failure scenarios.",
+        "pt-br": "Cinco repetições locais em fixture de 2.097.184 bytes; amostras, hashes e cenários de falha."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.3.0 qualification · historical",
+        "pt-br": "Qualificação 0.3.0 · histórico"
       },
       "path": "docs/reports/0.3.0-validation.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Local GNU/Linux CLI, signatures and reversible marking.",
-        "pt-br": "CLI local GNU/Linux, assinaturas e marcação reversível."
+        "en": "Historical 0.3.0 record. Local GNU/Linux CLI, signatures and reversible marking.",
+        "pt-br": "Registro histórico 0.3.0. CLI local GNU/Linux, assinaturas e marcação reversível."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.3.0 complete test log",
-        "pt-br": "Log completo dos testes 0.3.0"
+        "en": "0.3.0 complete test log · historical",
+        "pt-br": "Log completo dos testes 0.3.0 · histórico"
       },
       "path": "docs/reports/0.3.0-tests.txt",
       "date": "2026-10-16",
       "scope": {
-        "en": "81 unit and integration tests, exit 0.",
-        "pt-br": "81 testes unitários e de integração, código de saída 0."
+        "en": "Historical 0.3.0 record. 81 unit and integration tests, exit 0.",
+        "pt-br": "Registro histórico 0.3.0. 81 testes unitários e de integração, código de saída 0."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.3.0 portable checks",
-        "pt-br": "Verificações portáteis 0.3.0"
+        "en": "0.3.0 portable checks · historical",
+        "pt-br": "Verificações portáteis 0.3.0 · histórico"
       },
       "path": "docs/reports/0.3.0-self-test.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Nine isolated runtime fixture checks.",
-        "pt-br": "Nove verificações isoladas de fixtures em execução."
+        "en": "Historical 0.3.0 record. Nine isolated runtime fixture checks.",
+        "pt-br": "Registro histórico 0.3.0. Nove verificações isoladas de fixtures em execução."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.3.0 focused security review",
-        "pt-br": "Revisão de segurança 0.3.0"
+        "en": "0.3.0 focused security review · historical",
+        "pt-br": "Revisão de segurança 0.3.0 · histórico"
       },
       "path": "docs/reports/0.3.0-review.md",
       "date": "2026-10-16",
       "scope": {
-        "en": "Focused core and packaging review with stated limits.",
-        "pt-br": "Revisão focal do núcleo e empacotamento com limites declarados."
+        "en": "Historical 0.3.0 record. Focused core and packaging review with stated limits.",
+        "pt-br": "Registro histórico 0.3.0. Revisão focal do núcleo e empacotamento com limites declarados."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.3.0 website validation",
-        "pt-br": "Validação do site 0.3.0"
+        "en": "0.3.0 website validation · historical",
+        "pt-br": "Validação do site 0.3.0 · histórico"
       },
       "path": "docs/reports/0.3.0-website.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Chromium samples, keyboard, CSS motion, responsive layout and all generated links.",
-        "pt-br": "Amostras no Chromium, teclado, movimento CSS, layout responsivo e todos os links gerados."
+        "en": "Historical 0.3.0 record. Chromium samples, keyboard, CSS motion, responsive layout and all generated links.",
+        "pt-br": "Registro histórico 0.3.0. Amostras no Chromium, teclado, movimento CSS, layout responsivo e todos os links gerados."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
@@ -269,8 +408,8 @@
       "url": "/downloads/codemark.pyz"
     },
     {
-      "label": "secops-codemark-0.3.0.zupt",
-      "url": "/downloads/secops-codemark-0.3.0.zupt"
+      "label": "secops-codemark-0.4.0.zupt",
+      "url": "/downloads/secops-codemark-0.4.0.zupt"
     },
     {
       "label": "SHA256SUMS",

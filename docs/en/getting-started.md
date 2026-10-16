@@ -1,10 +1,12 @@
 # Get started
 
-CodeMark adds a reversible provenance comment to source files, records SHA-256 integrity, and searches for possible source copies. It runs locally with Python 3.10 or newer and the standard library. The CLI does not need a network connection, an AI model, or a pip dependency.
+SecOps Codemark 0.4.0 inventories regular files, authenticates their reference with hybrid signatures, and can create an encrypted private export. Reversible source comments and source-copy comparison remain available as separate operations.
 
-## Install and inspect
+The Python CLI uses the standard library and runs locally. Hybrid signing additionally requires OpenSSL 3.5 with the default provider. Private bundles require compatible Zupt. Availability and measured platform coverage are reported separately.
 
-Download the portable `codemark.pyz` from a verified project release, or run the source checkout with `python3 -m codemark`. Verify a downloaded artifact against a checksum obtained from a trusted channel. A checksum alone does not authenticate its publisher.
+## Inspect your host
+
+Download the portable `codemark.pyz` or the genuine unencrypted `.zupt` source release from the project downloads. Verify the checksum against an independently trusted reference. Source checkouts also support `python3 -m codemark`.
 
 ```sh
 python3 codemark.pyz --version
@@ -12,44 +14,55 @@ python3 codemark.pyz doctor --json
 python3 codemark.pyz self-test --json
 ```
 
-The self-test uses temporary fixtures and ephemeral signing keys. Read every `skip`: an absent optional tool has not passed a test. The self-test does not certify your project or every supported language.
+Read every `skip`; an absent tool has not passed its test. Fixtures do not certify your project. See [Validation](validation.md).
 
-## Preview a first-party module
+The examples use POSIX paths. On Windows, replace `python3` with `py -3` and use quoted native paths such as `"C:\Projects\release"` and `"C:\Keys\mldsa87.pem"`. OpenSSL and Zupt must be installed and available for their respective operations; do not infer Windows qualification from a Linux result.
 
-Start with a clean, versioned checkout and working project tests. Select a directory containing your own source. Keep vendored libraries, generated files, signed source formats, and private keys outside it.
+## Choose the operation
 
-```sh
-python3 codemark.pyz mark /path/to/project --owner "Your name or organization"
-```
+| Goal | Operation | Coverage |
+| --- | --- | --- |
+| Record file integrity without changing content | `snapshot` | All regular-file formats, with explicit metadata/VCS exclusions |
+| Authenticate an integrity reference and its history | Hybrid `sign`, then `audit` | Snapshot plus both signatures and independent trusted key pins |
+| Export confidential project data | `bundle` | Explicit recipient-encrypted archive of the selected tree |
+| Add removable provenance comments | `mark` | Supported first-party source formats only |
+| Look for possible source copies | `compare` | Mark, exact-content, and token-sketch candidates |
 
-Without `--apply`, `mark` only previews the operation. Inspect the file list and the `skipped` entries in JSON before proceeding.
+## Take a file snapshot
 
-```sh
-python3 codemark.pyz mark /path/to/project --owner "Your name or organization" --apply
-python3 codemark.pyz verify /path/to/project --json
-```
-
-Run your project's tests after marking. Commit the intended marked sources and `.codemark/project.json` and `.codemark/manifest.json`. Keep `.codemark/lock` out of version control. Preserve an independent reference copy.
-
-## After legitimate edits
-
-Review your changes, run `mark /path/to/project --apply`, and run your project's tests again. If you use signing, sign the new manifest again. An earlier signature does not authenticate a replacement manifest.
-
-## Remove comments
+Work on a stable tree. Keep signing keys, recipient private keys, passphrase files, and output archives outside it.
 
 ```sh
-python3 codemark.pyz unmark /path/to/project
-python3 codemark.pyz unmark /path/to/project --apply
+python3 codemark.pyz snapshot /project --json
+python3 codemark.pyz snapshot /project --apply --json
+python3 codemark.pyz verify /project --json
 ```
 
-The first command previews. The second removes only this project's marks while preserving later source edits. The old manifest remains and verification will report missing marks. Use Git or a backup to recover an earlier source version.
+The first command previews; the second saves `.codemark/integrity.json`. JSON, hidden and extensionless files, binaries, and ISOs are covered as regular bytes. Read the exclusions and limits in [Integrity](integrity.md). Unsigned verification checks differences without authenticating the reference.
 
-## Optional local interface
+## Add authentication
+
+Use existing ML-DSA-87 and Ed25519 PEM keys, then verify with both independently trusted complete fingerprints:
 
 ```sh
-python3 codemark.pyz gui
+python3 codemark.pyz sign /project --pq-key /outside/keys/mldsa87.pem --classical-key /outside/keys/ed25519.pem --json
+python3 codemark.pyz audit /project --pq-fingerprint 'SHA256:YOUR_MLDSA87_FINGERPRINT' --classical-fingerprint 'SHA256:YOUR_ED25519_FINGERPRINT' --json
 ```
 
-The interface requires Tkinter and a graphical session. On Windows, replace `python3` with `py -3`. Platform qualification and optional-component results are listed in [Validation](validation.md).
+This example assumes unencrypted key files protected by your key-storage policy. Encrypted keys require a shared `--passphrase-file`; there is no interactive prompt. Read [Signing](signing.md) before use. Save the returned checkpoint independently when you need to detect rollback to an older valid chain; see [Traceability](traceability.md).
 
-Continue with the [CLI reference](cli.md), [signing guide](signing.md), and [security model](security.md).
+## Optional source comments
+
+Choose a first-party source module with passing project tests:
+
+```sh
+python3 codemark.pyz mark /first-party-module --owner "Your name or organization"
+python3 codemark.pyz mark /first-party-module --owner "Your name or organization" --apply
+python3 codemark.pyz unmark /first-party-module --apply
+```
+
+`mark` and `unmark` preview without `--apply`. Comments are removable and do not change the source license. Run the project's tests after marking. Source-comment coverage does not extend to binaries or JSON. If you also need an all-file snapshot, take it after completing your intended source edits.
+
+The optional Tkinter interface opens with `python3 codemark.pyz gui` and handles the legacy source-comment workflow. Use the CLI for whole-file inventories and hybrid attestations.
+
+Continue with [CLI reference](cli.md), [encrypted exports](encryption.md), and [Security](security.md).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the bilingual, JavaScript-free CodeMark website with the stdlib."""
+"""Build the bilingual, JavaScript-free SecOps Codemark website with the stdlib."""
 
 import argparse
 import json
@@ -14,8 +14,19 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "website"
 OUT = SITE / "public"
-DOCS = ["getting-started", "cli", "signing", "integration", "security", "validation"]
-WIKI = ["architecture", "formats", "troubleshooting", "contributing"]
+DOCS = [
+    "getting-started",
+    "integrity",
+    "cli",
+    "signing",
+    "traceability",
+    "encryption",
+    "integration",
+    "evidence",
+    "security",
+    "validation",
+]
+WIKI = ["architecture", "formats", "cryptography", "troubleshooting", "contributing"]
 TEXT = {
     "en": {
         "language": "English",
@@ -24,67 +35,77 @@ TEXT = {
         "source_dir": "en",
         "nav": ["Docs", "Wiki", "Evidence", "Downloads"],
         "skip": "Skip to content",
-        "tagline": "Source provenance. Locally verifiable.",
-        "description": "Reversible source marks, integrity manifests, and copy-candidate analysis. Your source stays on your machine.",
+        "tagline": "Know your files. Trust the reference.",
+        "description": "Streaming file integrity, mandatory hybrid signatures and explicit encrypted exports. Local tools with evidence you can inspect.",
         "start": "Read the documentation",
-        "download": "Get CodeMark",
+        "download": "Get SecOps Codemark",
         "offline": "Offline by design",
         "license": "License",
         "runtime": "Runtime",
         "release": "Release",
         "network": "Network required",
         "none": "None",
-        "workflow": "A reference you can inspect.",
-        "workflow_detail": "Start with your own source. Keep a trusted record. Investigate differences with the context they deserve.",
+        "workflow": "Choose the evidence you need.",
+        "workflow_detail": "Hash regular files without changing them. Authenticate a reviewed reference. Encrypt a private export for its intended recipient.",
         "steps": [
             (
-                "Mark",
-                "Preview reversible comments. Record a project identity and source hashes without changing the source license.",
+                "Snapshot",
+                "SHA-256 and SHA-512 for regular files of any format, with explicit exclusions and bounded streaming.",
             ),
             (
-                "Verify",
-                "Compare a stable tree with its manifest. Add a pinned-key signature when you need an authenticated reference.",
+                "Authenticate",
+                "Both ML-DSA-87 and Ed25519 signatures, independently pinned keys, and linked local history.",
             ),
             (
-                "Compare",
-                "Find exact content and token-similarity candidates. Review the matching files before drawing conclusions.",
+                "Export privately",
+                "Explicit Zupt ML-KEM-768 + X25519 recipient encryption. Public source releases stay unencrypted.",
             ),
         ],
-        "limits_title": "Understand what the evidence means.",
-        "limits": "Marks are removable. Signatures bind a manifest to a key. Similarity produces candidates for review. None of these establishes legal ownership, a trusted timestamp, or universal copy detection.",
+        "limits_title": "Clear trust. Explicit boundaries.",
+        "limits": "Signatures authenticate; they do not hide content or prove a trusted date. Detecting an older valid history requires an independent expected checkpoint. Encryption is an explicit private-export step.",
         "security_link": "Read the security model",
         "evidence_link": "Inspect release evidence",
         "docs_title": "Documentation",
-        "docs_intro": "From a first preview to a signed release reference. Commands, boundaries, and reproducible checks in one place.",
+        "docs_intro": "Start with a stable tree, understand each trust boundary, and build a reference you can verify.",
         "wiki_title": "Project wiki",
-        "wiki_intro": "How CodeMark works, how its formats behave, and how to diagnose or contribute a change.",
+        "wiki_intro": "How SecOps Codemark works, how its formats behave, and how to diagnose or contribute a change.",
         "doc_titles": [
             "Get started",
+            "File integrity",
             "CLI reference",
-            "Signing",
-            "CI and integration",
+            "Hybrid signing",
+            "Traceability",
+            "Private encryption",
+            "CI and maintenance",
+            "Examples and evaluation",
             "Security model",
             "Validation",
         ],
         "doc_details": [
-            "Install, inspect the host, preview, apply, and reverse a mark.",
-            "Commands, reports, exit status, and resource limits.",
-            "OpenSSH Ed25519 and optional OpenPGP with a pinned key.",
-            "Protect the reference through a release and verification pipeline.",
-            "Trust boundaries, key handling, and the meaning of a match.",
-            "Reproduce checks and distinguish historical evidence.",
+            "Choose a workflow and inspect your host.",
+            "Regular files, SHA-256/SHA-512, exclusions and limits.",
+            "Commands, coverage modes, reports and exit status.",
+            "Two mandatory signatures and independent public-key pins.",
+            "Linked records, checkpoints and rollback detection.",
+            "Recipient trust, complete private trees and restoration.",
+            "Protect a reference through the release pipeline.",
+            "Reproducible fixtures, tool comparison and stated use.",
+            "What is protected and what remains the operator’s responsibility.",
+            "Actual platform results and historical reports.",
         ],
         "wiki_titles": [
             "Architecture",
             "Formats and coverage",
+            "Cryptography and trust",
             "Troubleshooting",
             "Contributing",
         ],
         "wiki_details": [
-            "Modules, data flow, and operational boundaries.",
-            "Comment families, metadata, exclusions, and token sketches.",
-            "Interpret failures, skips, locks, and signature errors.",
-            "Development checks, bilingual docs, and release evidence.",
+            "Modules, data flow and native boundaries.",
+            "Snapshots, source comments, metadata and sketches.",
+            "Algorithm roles, standards and key management.",
+            "Failures, incomplete trust, tools and recovery.",
+            "Checks, bilingual documentation and release evidence.",
         ],
         "evidence_title": "Release evidence",
         "evidence_intro": "Measured results have a date, a source revision, and a scope. Pending work remains visible; historical reports retain their original version.",
@@ -100,8 +121,8 @@ TEXT = {
         "downloads_title": "Downloads",
         "downloads_intro": "Portable Python executable and genuine .zupt source archives. Verify SHA-256 checksums against an independently trusted reference before running downloaded code.",
         "downloads_pending": "Downloads are being qualified for this release. Published artifacts will appear here after their checks are recorded.",
-        "download_help": "The portable requires Python 3.10 or newer. Source releases use the genuine .zupt format and require zupt to extract. A checksum detects a change against a trusted reference; it does not authenticate the publisher by itself.",
-        "footer": "Local provenance and integrity tooling. Free software, GPL-3.0-or-later.",
+        "download_help": "The portable requires Python 3.10 or newer. Hybrid signing additionally requires OpenSSL 3.5 with the default provider; private encrypted exports need compatible Zupt. Public source releases are unencrypted genuine .zupt archives. Verify checksums through an independently trusted channel.",
+        "footer": "File integrity, hybrid authentication and local provenance. GPL-3.0-or-later.",
         "static": "Static HTML + CSS · No JavaScript · No analytics",
         "policy": "Security policy",
         "historical": "Historical record",
@@ -115,6 +136,11 @@ TEXT = {
             "qualified-with-scope": "Qualified with scope",
             "current": "Current",
         },
+        "adoption": "Already used in the maintainer’s projects.",
+        "evaluation_title": "Evidence before conclusions.",
+        "evaluation_detail": "Inspect release checks, reproduce the examples and read comparisons within their stated scope.",
+        "examples_link": "Examples and evaluation",
+        "integration_link": "CI and maintenance",
     },
     "pt-br": {
         "language": "Português brasileiro",
@@ -123,67 +149,77 @@ TEXT = {
         "source_dir": "pt-BR",
         "nav": ["Docs", "Wiki", "Evidências", "Downloads"],
         "skip": "Pular para o conteúdo",
-        "tagline": "Procedência de fontes. Verificação local.",
-        "description": "Marcas reversíveis, manifestos de integridade e análise de possíveis cópias. Seus fontes ficam na sua máquina.",
+        "tagline": "Conheça os arquivos. Confira a referência.",
+        "description": "Integridade em blocos, assinaturas híbridas obrigatórias e exportações criptografadas explícitas. Ferramentas locais com evidências para conferir.",
         "start": "Ler a documentação",
-        "download": "Baixar CodeMark",
+        "download": "Baixar SecOps Codemark",
         "offline": "Local por princípio",
         "license": "Licença",
         "runtime": "Ambiente",
         "release": "Versão",
         "network": "Precisa de rede",
         "none": "Não",
-        "workflow": "Uma referência que você pode conferir.",
-        "workflow_detail": "Comece pelos seus fontes. Preserve um registro confiável. Investigue divergências com o contexto necessário.",
+        "workflow": "Escolha a evidência necessária.",
+        "workflow_detail": "Calcule hashes sem mudar os arquivos. Autentique uma referência revisada. Criptografe a exportação privada para o destinatário pretendido.",
         "steps": [
             (
-                "Marcar",
-                "Confira a prévia dos comentários reversíveis. Registre identidade e hashes sem mudar a licença do fonte.",
+                "Inventariar",
+                "SHA-256 e SHA-512 de regulares de qualquer formato, com exclusões explícitas e leitura limitada em blocos.",
             ),
             (
-                "Verificar",
-                "Compare a árvore estável com o manifesto. Assine com chave fixada quando precisar autenticar a referência.",
+                "Autenticar",
+                "Assinaturas ML-DSA-87 e Ed25519 juntas, chaves fixadas independentemente e histórico local encadeado.",
             ),
             (
-                "Comparar",
-                "Localize candidatos por conteúdo exato e similaridade de tokens. Inspecione os arquivos antes de concluir.",
+                "Exportar em privado",
+                "Criptografia explícita de destinatário Zupt ML-KEM-768 + X25519. Fontes públicos continuam sem criptografia.",
             ),
         ],
-        "limits_title": "Entenda o significado das evidências.",
-        "limits": "Marcas são removíveis. Assinaturas vinculam um manifesto a uma chave. Similaridade gera candidatos para revisão. Essas camadas não comprovam titularidade jurídica, data confiável ou detecção universal de cópias.",
+        "limits_title": "Confiança clara. Limites explícitos.",
+        "limits": "Assinaturas autenticam; não ocultam conteúdo nem comprovam data confiável. Detectar histórico antigo válido exige checkpoint esperado independente. Criptografia é uma etapa explícita de exportação privada.",
         "security_link": "Ler o modelo de segurança",
         "evidence_link": "Conferir as evidências",
         "docs_title": "Documentação",
-        "docs_intro": "Da primeira prévia à referência assinada. Comandos, limites e verificações reproduzíveis reunidos num só lugar.",
+        "docs_intro": "Comece com uma árvore estável, entenda cada limite de confiança e construa uma referência verificável.",
         "wiki_title": "Wiki do projeto",
-        "wiki_intro": "Como CodeMark funciona, seus formatos e como diagnosticar problemas ou contribuir com mudanças.",
+        "wiki_intro": "Como SecOps Codemark funciona, seus formatos e como diagnosticar problemas ou contribuir com mudanças.",
         "doc_titles": [
             "Primeiros passos",
+            "Integridade de arquivos",
             "Referência da CLI",
-            "Assinaturas",
-            "CI e integração",
+            "Assinatura híbrida",
+            "Rastreabilidade",
+            "Criptografia privada",
+            "CI e manutenção",
+            "Exemplos e avaliação",
             "Modelo de segurança",
             "Validação",
         ],
         "doc_details": [
-            "Instalar, conferir o host, visualizar, aplicar e remover marcas.",
-            "Comandos, relatórios, códigos de saída e limites.",
-            "OpenSSH Ed25519 e OpenPGP opcional com chave fixada.",
-            "Preservar a referência no lançamento e na verificação.",
-            "Confiança, chaves e o significado de uma correspondência.",
-            "Reproduzir checks e identificar evidências históricas.",
+            "Escolher o fluxo e conferir o host.",
+            "Regulares, SHA-256/SHA-512, exclusões e tetos.",
+            "Comandos, cobertura, relatórios e códigos de saída.",
+            "Duas assinaturas obrigatórias e chaves confiáveis independentes.",
+            "Registros, checkpoints e detecção de rollback.",
+            "Destinatário, árvore privada completa e restauração.",
+            "Proteger a referência no pipeline de lançamento.",
+            "Fixtures reproduzíveis, comparação e uso declarado.",
+            "Proteções e responsabilidades que permanecem com o operador.",
+            "Resultados reais de plataformas e relatórios históricos.",
         ],
         "wiki_titles": [
             "Arquitetura",
             "Formatos e cobertura",
+            "Criptografia e confiança",
             "Resolver problemas",
             "Contribuir",
         ],
         "wiki_details": [
-            "Módulos, fluxo de dados e limites operacionais.",
-            "Comentários, metadados, exclusões e sketches de tokens.",
-            "Interpretar falhas, ausências, travas e erros de assinatura.",
-            "Checks de desenvolvimento, documentação bilíngue e evidências.",
+            "Módulos, dados e limites nativos.",
+            "Snapshots, comentários, metadados e sketches.",
+            "Algoritmos, padrões e gestão de chaves.",
+            "Falhas, confiança incompleta, ferramentas e recuperação.",
+            "Checks, documentação bilíngue e evidências.",
         ],
         "evidence_title": "Evidências da versão",
         "evidence_intro": "Resultados medidos têm data, revisão e escopo. Pendências ficam visíveis; relatórios históricos preservam sua versão original.",
@@ -199,8 +235,8 @@ TEXT = {
         "downloads_title": "Downloads",
         "downloads_intro": "Executável Python portátil e fontes em .zupt genuíno. Confira SHA-256 contra referência confiável independente antes de executar código baixado.",
         "downloads_pending": "Os downloads desta versão estão em qualificação. Os artefatos aparecerão aqui após registrar suas verificações.",
-        "download_help": "O portátil precisa de Python 3.10 ou superior. Os fontes usam .zupt genuíno e precisam de zupt para extração. Um checksum detecta mudanças contra referência confiável; sozinho não autentica quem publicou o arquivo.",
-        "footer": "Ferramentas locais de procedência e integridade. Software livre, GPL-3.0-or-later.",
+        "download_help": "O portátil precisa de Python 3.10 ou superior. Assinatura híbrida requer OpenSSL 3.5 com provider padrão; exportação privada criptografada precisa de Zupt compatível. Fontes públicos usam .zupt genuíno sem criptografia. Confira checksums por canal independente confiável.",
+        "footer": "Integridade, autenticação híbrida e procedência local. GPL-3.0-or-later.",
         "static": "HTML + CSS estáticos · Sem JavaScript · Sem analytics",
         "policy": "Política de segurança",
         "historical": "Registro histórico",
@@ -214,6 +250,11 @@ TEXT = {
             "qualified-with-scope": "Qualificado no escopo",
             "current": "Atual",
         },
+        "adoption": "Em uso nos projetos do mantenedor.",
+        "evaluation_title": "Evidência antes das conclusões.",
+        "evaluation_detail": "Confira os checks, reproduza os exemplos e leia comparações dentro do escopo declarado.",
+        "examples_link": "Exemplos e avaliação",
+        "integration_link": "CI e manutenção",
     },
 }
 
@@ -411,7 +452,7 @@ def page(lang, route, title, description, body, data, section=""):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{escape(title)} · CODEMARK</title>
+<title>{escape(title)} · SecOps Codemark</title>
 <meta name="description" content="{escape(description, quote=True)}">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="{safe_url(canonical)}">
@@ -423,12 +464,12 @@ def page(lang, route, title, description, body, data, section=""):
 <body>
 <a class="skip-link" href="#main">{t["skip"]}</a>
 <header class="site-header"><div class="wrap header-inner">
-<a class="brand" href="/{lang}/">{symbol()}<span>CODEMARK</span></a>
+<a class="brand" href="/{lang}/">{symbol()}<span>SecOps Codemark</span></a>
 <nav class="site-nav" aria-label="{"Navegação principal" if lang == "pt-br" else "Main navigation"}">{"".join(nav)}<a class="language-link" lang="{"pt-BR" if lang == "en" else "en"}" hreflang="{"pt-BR" if lang == "en" else "en"}" href="{other}">{t["other"]}</a></nav>
 </div></header>
 <main id="main" class="wrap" tabindex="-1">{body}</main>
-<footer class="site-footer wrap"><div class="footer-top"><div><a class="brand" href="/{lang}/">CODEMARK</a><p>{t["footer"]}</p></div><nav class="repo-links" aria-label="{"Repositórios de fontes" if lang == "pt-br" else "Source repositories"}">{repos}</nav></div>
-<div class="footer-bottom"><span>© 2026 CodeMark contributors · <a href="/license.txt">GPL-3.0-or-later</a></span><span>{t["static"]}</span><a href="/{lang}/docs/security-policy/">{t["policy"]}</a></div></footer>
+<footer class="site-footer wrap"><div class="footer-top"><div><a class="brand" href="/{lang}/">SecOps Codemark</a><p>{t["footer"]}</p></div><nav class="repo-links" aria-label="{"Repositórios de fontes" if lang == "pt-br" else "Source repositories"}">{repos}</nav></div>
+<div class="footer-bottom"><span>© 2026 SecOps Codemark contributors · <a href="/license.txt">GPL-3.0-or-later</a></span><span>{t["static"]}</span><a href="/{lang}/docs/security-policy/">{t["policy"]}</a></div></footer>
 </body>
 </html>
 '''
@@ -440,17 +481,23 @@ def intro(title, description, eyebrow=""):
 
 def home(lang, data):
     t = TEXT[lang]
+    destinations = ("integrity", "signing", "encryption")
     steps = "".join(
-        f'<article class="step"><span class="step-number">0{index}</span><h3>{title}</h3><p>{description}</p></article>'
-        for index, (title, description) in enumerate(t["steps"], 1)
+        f'<article class="step accent-{index}"><span class="step-number">0{index}</span>'
+        f'<h3><a href="/{lang}/docs/{destination}/">{title}</a></h3><p>{description}</p>'
+        "</article>"
+        for index, ((title, description), destination) in enumerate(
+            zip(t["steps"], destinations), 1
+        )
     )
-    return f"""<section class="hero"><div><p class="eyebrow">{t["offline"]} / Python 3.10+</p><h1>CODEMARK</h1><p class="lead">{t["tagline"]}</p><p class="description">{t["description"]}</p><div class="actions"><a class="button" href="/{lang}/docs/getting-started/">{t["start"]} <span aria-hidden="true">↗</span></a><a class="button secondary" href="/{lang}/downloads/">{t["download"]}</a></div></div>
-<div class="hero-art"><div class="art-caption"><span>Source → Reference</span><span>v{escape(data["version"])}</span></div>{symbol(True)}<pre><code><span class="prompt">$</span> python3 codemark.pyz mark ./project --owner "You"
-<span class="prompt">$</span> python3 codemark.pyz verify ./project --json
-<span class="prompt">$</span> python3 codemark.pyz compare ./project ./candidate</code></pre></div></section>
+    return f"""<section class="hero"><div class="hero-copy"><p class="eyebrow">{t["offline"]} / v{escape(data["version"])}</p><h1><span>SecOps</span> Codemark</h1><p class="lead">{t["tagline"]}</p><p class="description">{t["description"]}</p><div class="actions"><a class="button" href="/{lang}/docs/getting-started/">{t["start"]} <span aria-hidden="true">↗</span></a><a class="button secondary" href="/{lang}/evidence/">{t["evidence_link"]}</a></div></div>
+<div class="hero-art"><div class="art-caption"><span>Files → Reference</span>{badge(data["status"], lang)}</div>{symbol(True)}<div class="algorithm-tags"><span>SHA-256 + SHA-512</span><span>ML-DSA-87 + Ed25519</span></div><pre tabindex="0"><code><span class="prompt">$</span> python3 codemark.pyz snapshot ./project
+<span class="prompt">$</span> python3 codemark.pyz snapshot ./project --apply
+<span class="prompt">$</span> python3 codemark.pyz doctor --json</code></pre></div></section>
 <div class="release-strip"><div><span class="label">{t["release"]}</span><strong>{escape(data["version"])}</strong></div><div><span class="label">{t["runtime"]}</span><strong>Python 3.10+</strong></div><div><span class="label">{t["license"]}</span><strong>GPL-3.0-or-later</strong></div><div><span class="label">{t["network"]}</span><strong>{t["none"]}</strong></div></div>
 <section class="section"><div class="section-heading"><h2>{t["workflow"]}</h2><p>{t["workflow_detail"]}</p></div><div class="steps">{steps}</div></section>
-<section class="section"><p class="eyebrow">{"Confiança e limites" if lang == "pt-br" else "Trust and limits"}</p><h2>{t["limits_title"]}</h2><p class="statement">{t["limits"]}</p><div class="actions"><a href="/{lang}/docs/security/">{t["security_link"]} →</a><a href="/{lang}/evidence/">{t["evidence_link"]} →</a></div></section>"""
+<section class="section evidence-callout"><div><p class="eyebrow">{"Evidências e uso" if lang == "pt-br" else "Evidence and use"}</p><h2>{t["evaluation_title"]}</h2><p>{t["evaluation_detail"]}</p><div class="actions"><a class="button secondary" href="/{lang}/docs/evidence/">{t["examples_link"]}</a><a href="/{lang}/docs/integration/">{t["integration_link"]} →</a></div></div><aside class="adoption-note"><span class="label">{"Uso" if lang == "pt-br" else "Use"}</span><p>{t["adoption"]}</p><a href="/{lang}/evidence/">{t["evidence_link"]} →</a></aside></section>
+<section class="section trust-section"><p class="eyebrow">{"Confiança e limites" if lang == "pt-br" else "Trust and limits"}</p><h2>{t["limits_title"]}</h2><p class="statement">{t["limits"]}</p><div class="actions"><a href="/{lang}/docs/security/">{t["security_link"]} →</a><a href="/{lang}/downloads/">{t["download"]} →</a></div></section>"""
 
 
 def listing(lang, kind):
@@ -465,7 +512,7 @@ def listing(lang, kind):
     title = t["docs_title"] if kind == "docs" else t["wiki_title"]
     description = t["docs_intro"] if kind == "docs" else t["wiki_intro"]
     return (
-        intro(title, description, "CODEMARK / " + t["language"])
+        intro(title, description, "SecOps Codemark / " + t["language"])
         + '<section class="section"><ul class="link-list">'
         + rows
         + "</ul></section>"
@@ -515,7 +562,11 @@ def evidence(lang, data):
             f'<article class="report"><div class="report-meta">{badge(item["status"], lang)}<time datetime="{escape(item["date"], quote=True)}">{escape(item["date"])}</time></div><h3>{escape(localized(item["title"], lang))}</h3><p>{escape(localized(item["scope"], lang))}</p><a href="/{lang}/reports/{source.stem}/">{t["view_report"]}</a> · <a download href="/reports/{source.name}">{t["report_download"]}</a></article>'
         )
     return (
-        intro(t["evidence_title"], t["evidence_intro"], "CODEMARK / " + data["version"])
+        intro(
+            t["evidence_title"],
+            t["evidence_intro"],
+            "SecOps Codemark / " + data["version"],
+        )
         + f'<div class="notice"><p>{badge(data["status"], lang)} <strong>{t["date"]}:</strong> {escape(data["date"])} · <strong>{t["commit"]}:</strong> <code>{escape(data["commit"] or t["unknown"])}</code></p><p>{escape(localized(data["scope"], lang))}</p></div><div class="metrics">{metrics}</div><section class="section"><h2>{t["checks"]}</h2><ul class="check-list">{checks}</ul></section><section class="section"><h2>{t["reports"]}</h2><p>{t["reports_intro"]}</p>{"".join(reports)}</section>'
     )
 
@@ -535,7 +586,9 @@ def downloads(lang, data):
         content = '<div class="notice"><p>' + t["downloads_pending"] + "</p></div>"
     return (
         intro(
-            t["downloads_title"], t["downloads_intro"], "CODEMARK / " + data["version"]
+            t["downloads_title"],
+            t["downloads_intro"],
+            "SecOps Codemark / " + data["version"],
         )
         + '<section class="section">'
         + content
@@ -665,7 +718,7 @@ def build(output):
         mapping = document_map(lang, data)
         inline_mapping = {**document_map(t["other_lang"], data), **mapping}
         routes_for_language = {
-            "": ("CODEMARK", t["description"], home(lang, data), ""),
+            "": ("SecOps Codemark", t["description"], home(lang, data), ""),
             "docs/": (t["docs_title"], t["docs_intro"], listing(lang, "docs"), "docs"),
             "wiki/": (t["wiki_title"], t["wiki_intro"], listing(lang, "wiki"), "wiki"),
             "evidence/": (
@@ -729,7 +782,7 @@ def build(output):
                 + sidebar(lang, target)
                 + '<article class="article"><p class="breadcrumb"><a href="/'
                 + lang
-                + '/">CODEMARK</a> / <a href="/'
+                + '/">SecOps Codemark</a> / <a href="/'
                 + lang
                 + "/"
                 + section
@@ -741,7 +794,7 @@ def build(output):
             )
             routes_for_language[target.removeprefix(f"/{lang}/")] = (
                 title,
-                title + " — CODEMARK",
+                title + " — SecOps Codemark",
                 body,
                 section,
             )

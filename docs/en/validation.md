@@ -8,6 +8,8 @@ The website's Evidence page is generated from `website/data/release.json`. Resul
 
 Do not carry a previous version's passing counts or qualification forward as evidence for changed source. Optional-tool skips remain visible. Agent review is identified as agent review and does not claim an external professional audit or certification.
 
+Version 0.4.0 adds all-regular-file snapshots, ML-DSA-87 + Ed25519 attestations, linked history and explicit encrypted private bundles. Current tests, native providers, platform jobs and artifact checks must be measured for this source; earlier passing counts are not carried forward.
+
 ## Reproduce locally
 
 ```sh
@@ -21,9 +23,21 @@ Use the build script's actual dependencies and read any unavailable-tool errors.
 
 ## What the tests exercise
 
-The repository contains tests for reversible marking, integrity differences, token comparisons, source prologues and byte preservation, metadata validation, report failures, CLI behavior, resource limits, package isolation, and signing backends.
+The repository contains tests for reversible marking, byte preservation, token candidates, metadata and report failures, all-file inventory, limits, package isolation, hybrid signatures, independent key pins and linked-history checks. Consult the current logs for the exact executed cases, tool versions and skips. Private-export and platform results must be recorded separately.
 
 The self-test creates temporary fixtures and ephemeral keys. It can execute language fixtures only when their toolchains are available. It does not exercise arbitrary user projects, all supported languages, a hostile operating system, GUI rendering, or legal claims.
+
+## Historical 0.3.0 record
+
+These records apply to version 0.3.0 and are dated **2026-10-16 UTC**. Its recorded qualification covers the local GNU/Linux CLI; Windows and GUI rendering were excluded. They remain unchanged as historical evidence.
+
+- [Qualification JSON](../reports/0.3.0-validation.json)
+- [Complete test log](../reports/0.3.0-tests.txt)
+- [Portable checks](../reports/0.3.0-self-test.json)
+- [Focused source and packaging review](../reports/0.3.0-review.md)
+- [Website validation](../reports/0.3.0-website.json)
+
+The 0.3.0 record reports 81 GNU/Linux tests and nine portable checks. Those results apply to the original source and environment, not the changed 0.4.0 source.
 
 ## Historical 0.2.0 record
 

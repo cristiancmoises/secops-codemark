@@ -1,0 +1,111 @@
+{
+  "format": "secops-codemark-pipeline-measurement-v1",
+  "version": "0.4.0",
+  "created_at": "2026-10-16T04:01:16+00:00",
+  "portable_sha256": "23fb1ada05d472b8cfad916a69f9f695dab55598140f874d8f876a928482e089",
+  "environment": {
+    "python": "3.12.12",
+    "system": "Linux",
+    "machine": "x86_64",
+    "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+    "openssl_sha256": "3175f1e85bd754c393ba42ba6a1d972a32de9d71e6020a5c073dd8946eaa8483"
+  },
+  "fixture": {
+    "files": 3,
+    "bytes": 2097184,
+    "initial_sha256": {
+      "securityctl": "306c6ca7407560340797866e077e053627ad409277d1b9da58106fce4cf717cb",
+      "settings.json": "b81e8e289d9561249a60945f6e744b8e136be6591b4651c302922ba115a04150",
+      "image.iso": "e9a099c75ef837c28bc91683bee127e463fa0ee10c11fd816f8d2d428c0d610e"
+    }
+  },
+  "repeats": 5,
+  "integration_surface": {
+    "shell_lines": 16,
+    "workflow_lines": 27,
+    "required_environment_settings": 6,
+    "verification_cli_commands": 1,
+    "signing_private_keys_on_verifier": 0,
+    "required_runtime_tools": [
+      "Python 3.10+",
+      "OpenSSL 3.5+",
+      "checksum-verified codemark.pyz"
+    ],
+    "normal_release_update": [
+      "review intended file changes",
+      "refresh snapshot",
+      "sign snapshot",
+      "store new checkpoint independently",
+      "verify release"
+    ]
+  },
+  "stage_seconds": {
+    "snapshot": {
+      "samples": [
+        0.061881,
+        0.063479,
+        0.094554,
+        0.070808,
+        0.079468
+      ],
+      "minimum": 0.061881,
+      "median": 0.070808,
+      "maximum": 0.094554
+    },
+    "sign": {
+      "samples": [
+        0.123762,
+        0.176553,
+        0.210108,
+        0.230852,
+        0.262321
+      ],
+      "minimum": 0.123762,
+      "median": 0.210108,
+      "maximum": 0.262321
+    },
+    "audit": {
+      "samples": [
+        0.090306,
+        0.109679,
+        0.099001,
+        0.115759,
+        0.160983
+      ],
+      "minimum": 0.090306,
+      "median": 0.109679,
+      "maximum": 0.160983
+    }
+  },
+  "failure_scenarios": [
+    {
+      "scenario": "changed-file",
+      "exit": 1,
+      "seconds": 0.140508
+    },
+    {
+      "scenario": "stale-checkpoint-after-intended-update",
+      "exit": 2,
+      "seconds": 0.073979
+    },
+    {
+      "scenario": "missing-trusted-pins",
+      "exit": 2,
+      "seconds": 0.054074
+    }
+  ],
+  "shell_example": {
+    "exit": 0,
+    "seconds": 0.138055,
+    "saved_report_matches": true
+  },
+  "intended_update": {
+    "snapshot_seconds": 0.061186,
+    "sign_seconds": 0.262076,
+    "audit_seconds": 0.124736,
+    "checkpoint_advanced": true
+  },
+  "scope": "Local CLI wall time includes Python startup, hashing and native signature processes. Signing repeats extend one history, increasing verification work. Key generation and dependency installation are excluded. Controlled fixtures are not independent adoption, human onboarding time or a long-term maintenance study.",
+  "runtime_commit": "e3a75b894af22be377a3b52c2b2f540bc11011b0",
+  "measurement_limits": "Shared development host; background activity was not controlled. No other qualification command was launched concurrently with these five samples."
+}

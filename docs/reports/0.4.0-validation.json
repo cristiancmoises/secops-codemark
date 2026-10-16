@@ -1,0 +1,82 @@
+{
+  "version": "0.4.0",
+  "date_utc": "2026-10-16",
+  "status": "runtime-and-packaging-qualified",
+  "runtime_commit": "e3a75b894af22be377a3b52c2b2f540bc11011b0",
+  "environment": {
+    "system": "GNU/Linux",
+    "python": "3.12.12",
+    "openssl": "3.5.7",
+    "zupt": "5.2.10",
+    "confinement": "Networkless namespace, read-only source and tool store, disposable writable workspace, capabilities dropped, no_new_privs, 2 GiB address-space limit"
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "passed": 175,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 7.011,
+    "log_sha256": "44e7e8b9a6c582dece87d41668df0f66c7afe999f85e2f658985687b6997d699"
+  },
+  "static_checks": {
+    "ruff": "pass",
+    "format": "pass",
+    "pyright": "0 errors; 0 warnings",
+    "selected_staged_source_secrets": "clean; not proof of absence"
+  },
+  "portable": {
+    "sha256": "23fb1ada05d472b8cfad916a69f9f695dab55598140f874d8f876a928482e089",
+    "checks_passed": 11,
+    "checks_skipped": 0,
+    "working_directory": "outside source tree",
+    "isolated_python": true
+  },
+  "native_crypto": {
+    "hybrid_signatures": "Real ML-DSA-87 and Ed25519 keys, signatures, context, tamper, independent pins, rotation and rollback checks passed",
+    "private_bundles": "Real native Zupt hybrid encryption, test and extracted-byte round trips; wrong recipient and tampering rejected"
+  },
+  "pending": [
+    "Final complete-source CI matrix",
+    "Final tagged source archive and extraction comparison",
+    "Final generated-link/download and public deployment verification"
+  ],
+  "limits": [
+    "Focused source review and controlled tests are not an independent external audit or certification",
+    "No FIPS 140 validation claim; hybrid signature composition is specific to this application",
+    "Windows platform tests do not imply availability or qualification of native optional crypto providers",
+    "Signing authenticates a reference and does not encrypt files, establish legal ownership or provide a trusted timestamp",
+    "Optional external checkpoint is required to detect valid old history rollback",
+    "Zupt 5.2.10 restores bytes but not POSIX modes or ACLs; restored trees may report mode_changed until trusted permissions are restored"
+  ],
+  "runtime_source_sha256": {
+    "__init__.py": "16e4408840549ae2d0ebd28308659a57ebce9be23fc3348221003d5325b6551c",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "attestations.py": "20c54b24a514e7f29fe8bef6b72f8378595acdfe96d7f07482dc3f1a1145f1d2",
+    "cli.py": "e37251badbfc20b1f3206aeb3cae0bcaff7231f4b99012ba1e6e9627f843aebf",
+    "core.py": "7c0b0be564b3b87643f8bef5704aa0811c9b5e6c1893ef64970d04b0db4b010b",
+    "fingerprint.py": "b0dc0ba6272982301df32b0c24f95288113540ecd87b5232ddd41a98517a4f58",
+    "gui.py": "19fa4328a2626950d46b1c3c725d9ead9541311d4ecbed327053b622aa99d3eb",
+    "integrity.py": "7d9f47bc38863334fce52e7a4f0855132256ec629e83a9e10218f0915aa6ecf6",
+    "pq_signing.py": "44f989d59d882d7e27dc574768b0f9f0ec96bcbe6ce4b73a36a1f6957c659d17",
+    "privacy.py": "cf9ef1ec76af613684e45b0dec8b1fc5db2d6bd4ca0aa9cf04d5082467492422",
+    "selftest.py": "9254fec5f516b3fe38dedead8a1d4cdae58af1833d8406ce783f2be1070e3735",
+    "signing.py": "c8cff71ece5c9a7ad7f8b809071e7ab8dca0d8e1eef2af975d6b06cd20c5d00f",
+    "ssh_signing.py": "84ad6a5bd699986d64d122e06f1fa4d2c5740cce3a128e1d75b1ed39bfddc70a"
+  },
+  "platform_ci": {
+    "url": "https://github.com/cristiancmoises/secops-codemark/actions/runs/38848038969",
+    "runtime_commit": "e810e0aa36eeca4aec963bc69e71d89296400913",
+    "jobs_passed": 6,
+    "platforms": [
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "python": [
+      "3.10",
+      "3.12",
+      "3.14"
+    ],
+    "scope": "Windows metadata fix qualification. Final source additionally restores the POSIX directory ctime check; final matrix is recorded separately. Optional native-tool availability varies by runner."
+  },
+  "qualification_source_commit": "f5f3a0f5957051162b30f324ae9ca56957c0244c"
+}

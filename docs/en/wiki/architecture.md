@@ -1,38 +1,48 @@
 # Architecture
 
-CodeMark separates source handling, comparison, command-line orchestration, optional signing, and the optional graphical interface. Runtime implementation uses Python's standard library.
+SecOps Codemark separates source comments, all-file inventory, cryptographic attestation, command orchestration and optional private export. Base Python code uses the standard library. Native OpenSSL and Zupt perform their respective optional cryptographic operations.
 
-## Modules
+## Modules and boundaries
 
-| Module | Responsibility |
+| Component | Responsibility |
 | --- | --- |
-| `codemark/core.py` | Bounded inventories, provenance comments, manifests, verification, mutations and rollback |
-| `codemark/fingerprint.py` | Normalized token fingerprints and similarity |
-| `codemark/cli.py` | Argument parsing, reports, exit status and command dispatch |
-| `codemark/ssh_signing.py` | OpenSSH Ed25519 signatures and pinned verification |
-| `codemark/signing.py` | Optional OpenPGP signing and dedicated-keyring verification |
+| `codemark/core.py` | Source inventories, comments, legacy manifests, bounded mutations and rollback |
+| `codemark/integrity.py` | Streaming regular-file SHA-256/SHA-512 inventories and comparison |
+| `codemark/pq_signing.py` | Canonical hybrid records, OpenSSL ML-DSA-87/Ed25519 calls and chain verification |
+| `codemark/fingerprint.py` | Normalized source-token sketches and similarity |
+| `codemark/cli.py` | Arguments, reports, mode selection and exit status |
+| `codemark/ssh_signing.py` | Legacy OpenSSH source-manifest signing |
+| `codemark/signing.py` | Legacy OpenPGP source-manifest signing |
+| Bundle command | Explicit Zupt recipient-encrypted export of the selected regular-file tree |
 | `codemark/selftest.py` | Temporary host fixtures and explicit optional-tool skips |
-| `codemark/gui.py` | Optional Tkinter interface |
+| `codemark/gui.py` | Optional Tkinter source-comment workflow |
 
-## Data flow
+## Integrity flow
 
 ```text
-Selected first-party tree
-  -> bounded source inventory
-  -> preview or reversible provenance comment
-  -> SHA-256 manifest and token sketches
-  -> optional signature against an existing key
+Stable selected tree
+  -> streamed regular-file hashes and explicit exclusions
+  -> exact integrity.json bytes
+  -> canonical record binding both snapshot digests
+  -> mandatory ML-DSA-87 and Ed25519 signatures
+  -> attestations.json linked history
 
-Saved reference + current tree -> integrity report
-Saved reference + suspect tree -> candidate comparison report
+Current tree + saved snapshot + history
+  + two independent trusted signer pins
+  + optional independently retained expected latest checkpoint
+  -> integrity and authentication report
 ```
 
-The comparison path reads suspect source as data. It does not execute it. The self-test executes only its own temporary fixtures.
+`verify` selects the full-file snapshot when present and can report unauthenticated integrity without pins. `audit` requires the snapshot, history and both pins. Legacy source-manifest signature options do not authenticate the full snapshot.
 
-## Trust boundary
+## Other flows
 
-An unsigned manifest is a local reference. Authentication needs a separately trusted public key and pinned fingerprint. The operator controls the local machine, source revision, signing keys, and CI environment.
+Source marking inserts removable comments only in supported first-party source formats. Comparison reads suspect source as data and produces candidates; it does not execute it. The self-test executes only its own fixtures.
 
-The project has no hosted runtime backend. This documentation website is prebuilt HTML and CSS, with no JavaScript, analytics, external fonts, or third-party asset requests.
+Private bundling exports the selected regular-file tree through Zupt, including VCS and `.codemark` contents. It has an explicit recipient and output destination and is separate from public unencrypted source distribution.
 
-See [formats](formats.md) for storage and [security](../security.md) for limits.
+## Local trust
+
+The operator controls the host, stable tree, verification executable, private keys, trusted pins, recipient identity and expected checkpoint. Local timestamps do not create an external timestamp authority. See [Cryptography](cryptography.md) and [Security](../security.md).
+
+The documentation site is prebuilt HTML/CSS/SVG with no JavaScript, analytics, remote fonts or hosted application backend.
