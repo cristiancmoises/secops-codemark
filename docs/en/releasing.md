@@ -65,4 +65,4 @@ The generator rejects duplicate report filenames and route stems before writing 
 - Publish the genuine unencrypted `.zupt`, `codemark.pyz` and `SHA256SUMS`, then download and hash every published asset. Native external Forgejo assets may reference verified versioned files on another forge; disclose that hosting explicitly.
 - Activate only a checked static site, using an atomic directory switch and retaining the previous release. Verify both languages, reports, HTTPS headers and exact public download bytes after activation. Use a real browser for layout, keyboard and reduced-motion checks.
 
-See [Validation](validation.md), [Integration](integration.md) and the [website build reference](../../website/README.md).
+See [Validation](validation.md), [Integration](integration.md) and the [website build reference](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.1/website/README.md).

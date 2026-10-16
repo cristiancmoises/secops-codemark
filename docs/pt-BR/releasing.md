@@ -65,4 +65,4 @@ O gerador recusa nomes de relatório duplicados e colisões no nome-base das rot
 - Publique `.zupt` genuíno sem criptografia, `codemark.pyz` e `SHA256SUMS`; baixe e confira o hash de cada artefato público. Assets externos nativos do Forgejo podem apontar a arquivos versionados e verificados de outro remoto; informe essa hospedagem explicitamente.
 - Ative somente o site estático verificado, por troca atômica de diretório, preservando a versão anterior. Confira idiomas, relatórios, cabeçalhos HTTPS e bytes dos downloads públicos. Use navegador real para layout, teclado e movimento reduzido.
 
-Consulte [Validação](validation.md), [Integração](integration.md) e a [referência de build do site](../../website/README.md).
+Consulte [Validação](validation.md), [Integração](integration.md) e a [referência de build do site](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.1/website/README.md).
