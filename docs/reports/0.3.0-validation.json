@@ -1,0 +1,52 @@
+{
+  "version": "0.3.0",
+  "recorded_at_utc": "2026-10-16T02:31:07.075407+00:00",
+  "source_commit": "d5b0d57e0a29d998d5d9c2b5514952b97eae075c",
+  "release_ref": "v0.3.0",
+  "status": "qualified-with-scope",
+  "scope": "Local GNU/Linux CLI with reversible marking, integrity verification, heuristic comparison, GPG and OpenSSH Ed25519 signing.",
+  "environment": {
+    "system": "GNU/Linux",
+    "architecture": "x86_64",
+    "python": "3.12.12",
+    "node": "24.18.0",
+    "execution": "user/mount/network/PID namespaces; read-only project/toolchain; clean environment; fixture-only keys"
+  },
+  "runtime_tests_builder_tree_sha256": "4232ba32db3761333b0c071836e727607d4e7854ea6cd0f4c29687f41fca47b2",
+  "tests": {
+    "run": 81,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "command": "python3 -m unittest discover -s tests -v",
+    "raw_log": "0.3.0-tests.txt",
+    "duration_seconds": 4.638
+  },
+  "self_test": {
+    "checks": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "report": "0.3.0-self-test.json"
+  },
+  "static_checks": {
+    "ruff": "pass",
+    "ruff_format": "pass",
+    "pyright": "0 errors, 0 warnings"
+  },
+  "review": {
+    "type": "focused source review with a separate reviewer",
+    "status": "approved",
+    "blocking_findings": 0,
+    "report": "0.3.0-review.md"
+  },
+  "release_gate": "Before publication, the annotated v0.3.0 tag must match main and the genuine unencrypted ZUPT archive must pass integrity testing and extracted-byte comparison with the tagged source.",
+  "limitations": [
+    "Windows CI results are separate from this local record.",
+    "GUI rendering was not qualified.",
+    "This is a focused review, with no claim of an external certification or comprehensive penetration test.",
+    "Heuristic similarity, removable marks and signatures do not establish legal authorship or a trusted timestamp.",
+    "Actively hostile concurrent modification and crash recovery after forced termination remain outside the supported guarantee."
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "version": "0.3.0",
+  "date": "2026-10-16",
+  "commit": "v0.3.0",
+  "site_url": "https://codemark.securityops.co",
+  "status": "qualified-with-scope",
+  "scope": {
+    "en": "Qualified local GNU/Linux CLI: reversible marking, integrity, similarity, and GPG/OpenSSH signing. 81 tests and 9 portable smoke checks passed. Windows and GUI rendering require separate validation.",
+    "pt-br": "CLI local qualificada em GNU/Linux: marcação reversível, integridade, similaridade e assinaturas GPG/OpenSSH. Passaram 81 testes e 9 verificações portáteis. Windows e renderização da GUI exigem validação própria."
+  },
+  "repositories": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/cristiancmoises/codemark"
+    },
+    {
+      "label": "Codeberg",
+      "url": "https://codeberg.org/berkeley/codemark"
+    },
+    {
+      "label": "Forgejo · securityops.co",
+      "url": "https://git.securityops.co/cristiancmoises/codemark"
+    },
+    {
+      "label": "Forgejo · securityops.com.br",
+      "url": "https://git.securityops.com.br/cristiancmoises/codemark"
+    }
+  ],
+  "checks": [
+    {
+      "name": {
+        "en": "Unit and integration tests",
+        "pt-br": "Testes unitários e de integração"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "81 tests passed; 0 failures, 0 errors, 0 skips. Real GPG and Ed25519 fixture keys.",
+        "pt-br": "81 testes passaram; 0 falhas, 0 erros e 0 ausências. Chaves temporárias reais GPG e Ed25519."
+      },
+      "command": "python3 -m unittest discover -s tests -v"
+    },
+    {
+      "name": {
+        "en": "Portable smoke checks",
+        "pt-br": "Verificações portáteis"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "9/9 checks passed, including Python, Node, Guile, tampering, signing and byte-preserving removal.",
+        "pt-br": "9/9 verificações passaram, incluindo Python, Node, Guile, adulteração, assinatura e remoção com bytes preservados."
+      },
+      "command": "python3 -I codemark.pyz self-test --json"
+    },
+    {
+      "name": {
+        "en": "Focused source review",
+        "pt-br": "Revisão focal do código"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Separate reviewer approved core and packaging after the fixes; no blocking findings in that scope.",
+        "pt-br": "Revisor separado aprovou núcleo e empacotamento após as correções; nenhum bloqueador nesse escopo."
+      }
+    },
+    {
+      "name": {
+        "en": "Static checks",
+        "pt-br": "Verificações estáticas"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Ruff, formatting and Pyright passed for all Python source, site builder and tests.",
+        "pt-br": "Ruff, formatação e Pyright passaram para todos os fontes Python, gerador do site e testes."
+      }
+    },
+    {
+      "name": {
+        "en": "Website validation",
+        "pt-br": "Validação do site"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "All generated HTML documents and local links passed. Chromium checked 20 page/viewport combinations, keyboard focus, motion preferences and zero scripts.",
+        "pt-br": "Todos os documentos HTML e links locais passaram. O Chromium verificou 20 combinações de página/tela, foco pelo teclado, preferência de movimento e ausência de scripts."
+      },
+      "command": "python3 scripts/build_site.py --check"
+    },
+    {
+      "name": {
+        "en": "Release archive",
+        "pt-br": "Pacote da versão"
+      },
+      "status": "pass",
+      "detail": {
+        "en": "Genuine unencrypted ZUPT passed integrity, extraction and source-byte comparison. Publication repeats comparison against the annotated tag.",
+        "pt-br": "O ZUPT genuíno e sem criptografia passou em integridade, extração e comparação dos bytes. A publicação repete a comparação contra a tag anotada."
+      },
+      "command": "python3 scripts/build.py --output dist --archive"
+    }
+  ],
+  "metrics": [
+    {
+      "label": {
+        "en": "Tests passed",
+        "pt-br": "Testes aprovados"
+      },
+      "value": "81",
+      "detail": {
+        "en": "Current run, zero skips.",
+        "pt-br": "Execução atual, sem testes ignorados."
+      }
+    },
+    {
+      "label": {
+        "en": "Smoke checks",
+        "pt-br": "Verificações portáteis"
+      },
+      "value": "9/9",
+      "detail": {
+        "en": "Isolated fixtures and temporary keys.",
+        "pt-br": "Fixtures isoladas e chaves temporárias."
+      }
+    },
+    {
+      "label": {
+        "en": "Pip dependencies",
+        "pt-br": "Dependências pip"
+      },
+      "value": "0",
+      "detail": {
+        "en": "Python standard library at runtime.",
+        "pt-br": "Biblioteca padrão do Python em execução."
+      }
+    },
+    {
+      "label": {
+        "en": "Browser JavaScript",
+        "pt-br": "JavaScript no navegador"
+      },
+      "value": "0 B",
+      "detail": {
+        "en": "Static HTML, CSS and local SVG.",
+        "pt-br": "HTML estático, CSS e SVG local."
+      }
+    }
+  ],
+  "reports": [
+    {
+      "title": {
+        "en": "0.3.0 qualification",
+        "pt-br": "Qualificação 0.3.0"
+      },
+      "path": "docs/reports/0.3.0-validation.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Local GNU/Linux CLI, signatures and reversible marking.",
+        "pt-br": "CLI local GNU/Linux, assinaturas e marcação reversível."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.3.0 complete test log",
+        "pt-br": "Log completo dos testes 0.3.0"
+      },
+      "path": "docs/reports/0.3.0-tests.txt",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "81 unit and integration tests, exit 0.",
+        "pt-br": "81 testes unitários e de integração, código de saída 0."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.3.0 portable checks",
+        "pt-br": "Verificações portáteis 0.3.0"
+      },
+      "path": "docs/reports/0.3.0-self-test.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Nine isolated runtime fixture checks.",
+        "pt-br": "Nove verificações isoladas de fixtures em execução."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.3.0 focused security review",
+        "pt-br": "Revisão de segurança 0.3.0"
+      },
+      "path": "docs/reports/0.3.0-review.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Focused core and packaging review with stated limits.",
+        "pt-br": "Revisão focal do núcleo e empacotamento com limites declarados."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.3.0 website validation",
+        "pt-br": "Validação do site 0.3.0"
+      },
+      "path": "docs/reports/0.3.0-website.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Chromium samples, keyboard, CSS motion, responsive layout and all generated links.",
+        "pt-br": "Amostras no Chromium, teclado, movimento CSS, layout responsivo e todos os links gerados."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.2.0 qualification · historical",
+        "pt-br": "Qualificação 0.2.0 · histórico"
+      },
+      "path": "docs/QUALIFICATION.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Historical 0.2.0 GNU/Linux CLI and OpenSSH record.",
+        "pt-br": "Registro histórico 0.2.0 da CLI GNU/Linux e OpenSSH."
+      },
+      "status": "historical"
+    },
+    {
+      "title": {
+        "en": "0.2.0 source review · historical",
+        "pt-br": "Revisão dos fontes 0.2.0 · histórico"
+      },
+      "path": "docs/REVIEW_0.2.0.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Historical 0.2.0 source review; scope and method in report.",
+        "pt-br": "Revisão histórica dos fontes 0.2.0; método e escopo no relatório."
+      },
+      "status": "historical"
+    },
+    {
+      "title": {
+        "en": "0.2.0 validation · historical",
+        "pt-br": "Validação 0.2.0 · histórico"
+      },
+      "path": "docs/VALIDATION.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Original 0.2.0 platform coverage and exclusions.",
+        "pt-br": "Cobertura e exclusões originais das plataformas na versão 0.2.0."
+      },
+      "status": "historical"
+    },
+    {
+      "title": {
+        "en": "0.2.0 operational scope · historical",
+        "pt-br": "Escopo operacional 0.2.0 · histórico"
+      },
+      "path": "docs/PRODUCTION.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Original 0.2.0 operational scope and activation.",
+        "pt-br": "Escopo operacional e ativação originais da versão 0.2.0."
+      },
+      "status": "historical"
+    }
+  ],
+  "downloads": [
+    {
+      "label": "codemark.pyz",
+      "url": "/downloads/codemark.pyz"
+    },
+    {
+      "label": "secops-codemark-0.3.0.zupt",
+      "url": "/downloads/secops-codemark-0.3.0.zupt"
+    },
+    {
+      "label": "SHA256SUMS",
+      "url": "/downloads/SHA256SUMS"
+    }
+  ]
+}

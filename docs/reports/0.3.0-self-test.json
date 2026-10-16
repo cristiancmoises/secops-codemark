@@ -1,0 +1,45 @@
+{
+  "action": "self-test",
+  "version": "0.3.0",
+  "ok": true,
+  "checks": [
+    {
+      "name": "mark",
+      "status": "pass"
+    },
+    {
+      "name": "verify",
+      "status": "pass"
+    },
+    {
+      "name": "python-runtime",
+      "status": "pass"
+    },
+    {
+      "name": "javascript-runtime",
+      "status": "pass"
+    },
+    {
+      "name": "guile-runtime",
+      "status": "pass"
+    },
+    {
+      "name": "openssh-signature",
+      "status": "pass"
+    },
+    {
+      "name": "tamper",
+      "status": "pass"
+    },
+    {
+      "name": "compare",
+      "status": "pass"
+    },
+    {
+      "name": "unmark",
+      "status": "pass"
+    }
+  ],
+  "scope": "Fixtures temporárias de CLI neste host; não certifica projetos ou plataformas.",
+  "note": "Nenhuma chave ou fonte do usuário foi usada. GUI e GPG não são exercitados por este autoteste."
+}

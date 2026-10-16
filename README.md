@@ -1,211 +1,110 @@
-# SecOps CodeMark
+# CODEMARK
 
-Uma marca d'água de procedência para código-fonte, com verificação de integridade
-e busca de cópias por similaridade. Local, sem IA, sem rede e sem pacotes pip.
-Licença da ferramenta: **GPL-3.0-or-later**. Versão 0.2.0.
+**Local source provenance, integrity verification, and copy-candidate analysis.**
 
-## Ativação da CLI
+[Português brasileiro](README.pt-BR.md) · [Documentation](https://codemark.securityops.co/en/docs/) · [Wiki](https://codemark.securityops.co/en/wiki/) · [Release evidence](https://codemark.securityops.co/en/evidence/)
 
-Consulte o [roteiro de produção e escopo validado](docs/PRODUCTION.md).
-Extraia o pacote e execute o autoteste na sua máquina:
+CodeMark adds reversible provenance comments to your source files, records a SHA-256 manifest, optionally signs that reference, and searches another tree for possible source copies. The CLI runs offline with **Python 3.10+ and its standard library**. No AI model, telemetry, server, or pip dependency is required.
 
-```sh
-python3 codemark.pyz self-test
-```
+Version **0.3.0** · **GPL-3.0-or-later** · [Full license](COPYING)
 
-Ele cria e apaga fixtures e chaves efêmeras, sem usar seus fontes ou chaves.
-Verifica marcação, integridade, adulteração, comparação e remoção; executa as
-fixtures em Python e, se disponíveis, Node e Guile; testa OpenSSH quando instalado.
-Ausências são listadas como `skip`. O resultado não certifica seu projeto.
-GUI e GPG continuam componentes opcionais fora da qualificação desta entrega.
+A mark can be removed or forged. A signature binds a manifest to a pinned key; it does not prove a trusted date, originality, or legal ownership. Similarity reports are leads for manual review. Marking does not change a project's license or prevent reverse engineering.
 
-CodeMark ajuda a registrar e comparar fontes. A marca pode ser removida ou
-forjada, e não impede REA, descompilação, estudo ou cópia de código público.
-O manifesto assinado vincula uma referência a uma chave; não prova data,
-originalidade ou titularidade legal. Projetos tratados conservam sua licença.
+## Get started
 
-## Começar
-
-Extraia o ZIP e abra um terminal na pasta extraída. Requer Python 3.10 ou
-superior. A interface opcional usa Tkinter, normalmente incluído no Python
-para Windows e disponível como componente do Python em GNU/Linux.
+Download the portable `codemark.pyz` or the genuine `.zupt` source release from the [project downloads](https://codemark.securityops.co/en/downloads/). Verify SHA-256 checksums against a trusted reference. Extract source releases with `zupt`; the portable needs only Python.
 
 ```sh
-python3 codemark.pyz gui
+python3 codemark.pyz --version
+python3 codemark.pyz doctor --json
+python3 codemark.pyz self-test --json
 ```
 
-No Windows: abra `Iniciar.bat`, ou use `py -3 codemark.pyz gui`.
-Em GNU/Linux: `sh iniciar.sh`. Se não houver sessão gráfica ou Tkinter, use a CLI.
+Read each self-test `skip`: an unavailable optional tool is not validated. The test uses temporary fixtures and ephemeral keys, not your project source or signing keys. See the current [release evidence](https://codemark.securityops.co/en/evidence/) for measured scope and limitations.
 
-Na janela: escolha a pasta de **código de sua autoria**, informe o titular,
-clique em **Prévia** e depois **Aplicar marca**. Dependências e diretórios de
-build conhecidos são excluídos. Bibliotecas de terceiros em outras pastas
-precisam ficar fora da raiz escolhida. Não atribua fontes alheios a si mesmo.
-
-Para quem prefere um comando:
+Start with a clean, versioned first-party module and passing project tests. Preview before applying:
 
 ```sh
-python3 codemark.pyz mark /caminho/do/projeto --owner "Security Ops" --apply
+python3 codemark.pyz mark /path/to/project --owner "Your name or organization"
+python3 codemark.pyz mark /path/to/project --owner "Your name or organization" --apply
+python3 codemark.pyz verify /path/to/project --json
 ```
 
-Use o titular correto em `--owner`. Sem `--apply`, o comando mostra uma prévia
-sem escrever. Depois da primeira aplicação, basta:
+Run your project's tests again. Commit the intended marked files and `.codemark/project.json` and `.codemark/manifest.json`. Keep `.codemark/lock` out of version control. Preserve an independent reference copy. Later applications can omit `--owner`.
+
+Source checkouts can use `python3 -m codemark` instead of `python3 codemark.pyz`. On Windows, replace `python3` with `py -3`.
+
+## Compare and remove
 
 ```sh
-python3 codemark.pyz mark /caminho/do/projeto --apply
+python3 codemark.pyz compare /project /suspect --threshold 0.80 --json
+python3 codemark.pyz unmark /project
+python3 codemark.pyz unmark /project --apply
 ```
 
-Cada arquivo recebe uma linha de comentário com este formato:
+Comparison detects matching identifiers, identical unmarked content, and approximate token fingerprints. It can find candidates with renamed files and some renamed identifiers. Scores describe bounded token sketches, not percentages of copied lines. False positives and false negatives are possible.
 
-```scheme
-;; CodeMark v1 project=<uuid> file=<id> owner="Security Ops"
-```
+`unmark` previews by default and preserves later edits when applied. The prior manifest remains, so `verify` reports the removed marks. Use Git or backups to recover earlier versions.
 
-A ferramenta escolhe a sintaxe de comentário da linguagem. A marca não contém
-restrições de uso nem altera a licença do arquivo.
+## Authenticate a reference
 
-## Verificar e comparar
+Optional OpenSSH Ed25519 signing requires local `ssh-keygen` with `-Y`. Use an existing private key outside the project and its adjacent `.pub` file:
 
 ```sh
-python3 codemark.pyz verify /caminho/do/projeto
-python3 codemark.pyz compare /caminho/do/projeto /pasta/suspeita
-```
-
-`verify` aponta fontes alterados, ausentes, novos e marcas removidas. Compara
-com `.codemark/manifest.json`, que precisa ser preservado como referência.
-Sem assinatura, essa referência é modificável como qualquer arquivo local.
-
-`compare` procura a marca, conteúdo idêntico sem marca e semelhanças entre
-tokens. A comparação aproximada ignora comentários e nomes de variáveis e
-funções, mantendo literais, palavras-chave e operações. Nomes de arquivo e
-pastas podem ser diferentes. É uma busca de candidatos por arquivo, não uma
-prova de plágio, detector universal ou análise semântica.
-
-```sh
-python3 codemark.pyz compare /projeto /suspeito --threshold 0.80 --json
-```
-
-Use `--json --output /pasta/novo-relatorio.json` para salvar um relatório.
-O destino deve ser novo para evitar sobrescrever fontes ou evidências.
-O relatório deve ficar fora das pastas do projeto e da comparação. O destino
-é reservado e seu conteúdo é gravado, sincronizado e fechado antes de alterar
-fontes, manifesto ou assinatura. Falhas de gravação não aplicam a operação;
-se a transação do projeto falhar, o relatório é removido. Consuma relatórios
-somente depois de o processo terminar e confira seu código de saída.
-
-## Assinar com OpenSSH Ed25519
-
-Backend opcional testado nesta versão, usando `ssh-keygen` do sistema com
-suporte a `-Y`. Use uma chave Ed25519 própria e sua chave pública adjacente
-`ARQUIVO.pub`. Guarde a chave privada fora da árvore do projeto.
-
-```sh
-python3 codemark.pyz sign /projeto --ssh-key ~/.ssh/codemark-signing
+python3 codemark.pyz sign /project --ssh-key ~/.ssh/codemark-signing
 ssh-keygen -l -E sha256 -f ~/.ssh/codemark-signing.pub
-python3 codemark.pyz verify /projeto --ssh-public-key ~/.ssh/codemark-signing.pub --ssh-fingerprint 'SHA256:SEU_FINGERPRINT_COMPLETO'
+python3 codemark.pyz verify /project --ssh-public-key ~/.ssh/codemark-signing.pub --ssh-fingerprint 'SHA256:YOUR_COMPLETE_FINGERPRINT'
 ```
 
-Substitua o exemplo `SHA256:...` pelo fingerprint completo retornado para sua
-chave. A senha, quando necessária, é tratada pelo OpenSSH local, nunca por
-argumento do CodeMark. Para automação, prepare sua chave/agente previamente.
-A árvore precisa estar íntegra antes de assinar; a assinatura é verificada
-antes de ser gravada em `.codemark/manifest.json.sshsig`.
+Replace the example with your complete trusted fingerprint. CodeMark pins the key and `codemark-manifest-v1` namespace. Optional OpenPGP signing is also available. Read [Signing](docs/en/signing.md) before use, including key trust and revocation limits.
 
-A verificação fixa uma única chave Ed25519 e o namespace
-`codemark-manifest-v1`. Chaves incorretas, manifesto adulterado e assinaturas de
-outro namespace são recusados. Não há consulta de revogação online. Preserve
-manifesto, assinatura e chave pública por uma referência confiável.
+## Automation and coverage
 
-## Assinar com GPG (opcional, sem qualificação neste ambiente)
+| Exit | Meaning |
+| --- | --- |
+| `0` | Completed; intact; no candidates; or self-test without failures |
+| `1` | Integrity differences, comparison candidates, or self-test failures |
+| `2` | Input, access, required-tool, or interruption error |
 
-Requer `gpg` para assinar e `gpgv` para verificar. Use uma chave que já é sua,
-com fingerprint completo. CodeMark não cria chaves e não recebe senhas.
-O agente GPG deve estar disponível e a chave desbloqueada quando necessário.
+Use `--json --output /reports/NEW.json` for a new report outside both checked trees. Consume it after the command exits and inspect the status. In CI, verify the reviewed reference; running `mark --apply` before verification would accept the current changes as the baseline.
 
-```sh
-python3 codemark.pyz sign /projeto --key SEU_FINGERPRINT_COMPLETO
-gpg --export SEU_FINGERPRINT_COMPLETO > owner-public.gpg
-python3 codemark.pyz verify /projeto --require-signature --keyring owner-public.gpg --fingerprint SEU_FINGERPRINT_COMPLETO
-```
+Supported comment styles cover Python, shell, Scheme/Lisp, JavaScript/TypeScript, C/C++, Rust, Go, Java, CSS, HTML/XML, SQL, Lua, YAML, TOML, and others. This is comment-format coverage, not compilation qualification for every language. Supported UTF-8/BOM and CRLF inputs are preserved. JSON, PHP, binaries, minified packages, and specially signed formats are outside marking coverage. Inspect `skipped` in the JSON report.
 
-Substitua os identificadores de exemplo pelo fingerprint completo, sem espaços.
-Guarde uma cópia do manifesto, assinatura e chave pública fora da pasta do
-projeto. Verifique o fingerprint por um canal independente. A verificação usa
-apenas o keyring indicado e a chave fixada, sem confiar no keyring padrão.
-O `gpgv` confia nas chaves desse keyring e não verifica sua expiração ou
-revogação; mantenha essa referência atualizada por um canal confiável.
-Após mudanças legítimas: execute `mark --apply` e assine novamente. A assinatura
-antiga fica inválida até ser refeita, como esperado.
+Known dependency/build directories are excluded. Symlinks and special files are refused. Limits include 5,000 sources, 2 MiB per source, 64 MiB total, 20,000 entries, and bounded comparisons. Work on a stable tree; ordinary rollback does not provide crash recovery after power loss or forced termination. See [Formats](docs/en/wiki/formats.md) and [Security](docs/en/security.md).
 
-## Remover a marca
+The optional Tkinter GUI opens with `python3 codemark.pyz gui` and needs a graphical session. Optional components and platform qualification are reported separately.
 
-```sh
-python3 codemark.pyz unmark /projeto
-python3 codemark.pyz unmark /projeto --apply
-```
+## Documentation
 
-A primeira linha mostra a prévia; a segunda remove somente a marca do projeto.
-Edições de código posteriores são preservadas. O manifesto permanece como
-referência anterior; `verify` passa a apontar as marcas removidas. Não se trata
-de restauração de versões. Use seu controle de versão para recuperar históricos.
+| Topic | English | Português brasileiro |
+| --- | --- | --- |
+| Start | [Get started](docs/en/getting-started.md) | [Primeiros passos](docs/pt-BR/getting-started.md) |
+| Commands | [CLI reference](docs/en/cli.md) | [Referência da CLI](docs/pt-BR/cli.md) |
+| Signatures | [Signing](docs/en/signing.md) | [Assinaturas](docs/pt-BR/signing.md) |
+| CI and releases | [Integration](docs/en/integration.md) | [Integração](docs/pt-BR/integration.md) |
+| Security | [Threat model](docs/en/security.md) | [Modelo de segurança](docs/pt-BR/security.md) |
+| Measured results | [Validation](docs/en/validation.md) | [Validação](docs/pt-BR/validation.md) |
+| Wiki | [Architecture](docs/en/wiki/architecture.md) | [Arquitetura](docs/pt-BR/wiki/architecture.md) |
 
-## Linguagens e cobertura
+Historical 0.2.0 qualification and review records remain explicitly versioned. They do not qualify changed source in a later release. Current results, skips, report dates, and scopes are published on the [Evidence page](https://codemark.securityops.co/en/evidence/).
 
-| Família | Exemplos |
-|---|---|
-| Python e scripts | Python, shell, fish, Ruby, Perl, PowerShell, Nix |
-| Scheme e Lisp | Guile/Scheme, Emacs Lisp, Common Lisp, Clojure, Racket |
-| Sintaxe de comentário `//` | JavaScript/TypeScript, C/C++, Rust, Go, Java, C#, Kotlin, Swift, Dart |
-| Estilos e marcação | CSS/SCSS, HTML, XML, SVG, Vue, Svelte |
-| Outros | SQL, Lua, YAML, TOML, CMake, Makefile |
-
-A marcação usa comentários, sem parser ou compilador de cada linguagem.
-Testes semânticos nesta entrega executam fixtures Python e JavaScript; demais
-famílias têm testes de preservação e comparação, sem alegar compilação em todas
-as toolchains.
-Guarde alterações no Git e execute os testes do seu projeto antes de publicar.
-
-UTF-8, BOM UTF-8 e CRLF são aceitos. JSON, PHP, binários, arquivos compactados,
-histórico Git, fontes em outros encodings e pacotes minificados não recebem
-marca nesta versão. Não é um scanner de segredos.
-Cabeçalhos isolados sem quebra de linha, como um arquivo contendo apenas
-`# coding: utf-8`, são preservados e listados fora da cobertura. Declarações
-XML e CSS `@charset`, cookies do Emacs e diretivas Ruby são mantidos antes da marca.
-
-Exclusões: `.git`, `.hg`, `.svn`, `.codemark`, `.venv`, `venv`, `node_modules`,
-`vendor`, `third_party`, `third-party`, `dist`, `build`, `target`, caches Python.
-O relatório JSON lista o que ficou fora da cobertura. Diretórios excluídos
-não são percorridos. Arquivos assinados PowerShell são preservados e ignorados.
-Outros formatos com assinatura especial devem ficar fora da raiz tratada.
-
-Limites por operação: 5.000 fontes, 2 MiB por fonte, 64 MiB somados (sem contar
-as marcas do cabeçalho), 20.000 entradas e 64 níveis de diretórios. Comparação:
-2.000.000 pares e 10.000 candidatos. Limites excedidos geram erro, sem lista
-parcial apresentada como completa. A enumeração é interrompida no teto de
-entradas. Selecione um módulo menor.
-Metadados gerados e lidos têm teto de 64 MiB; a saída é validada antes de gravar.
-Links simbólicos no caminho/árvore tratada e arquivos especiais são recusados.
-Trabalhe com a árvore estável, sem editores ou builds escrevendo simultaneamente.
-
-## Integração, testes e licença
-
-- [Integração em CI, GNU Guix e controle de versão](docs/INTEGRATION.md)
-- [Modelo de ameaças e limites](docs/THREAT_MODEL.md)
-- [Validação e plataformas testadas](docs/VALIDATION.md)
-- [Prompt executado para a versão 0.2.0](PROMPT-PRODUCAO-0.2.0.md)
-- [Prompt original da versão 0.1.0](PROMPT-GOD-TIER.md)
-- [Licença GPL completa](COPYING)
+## Develop
 
 ```sh
 python3 -m unittest discover -s tests -v
 python3 scripts/build.py
+python3 scripts/build_site.py --check
 ```
 
-A construção gera `dist/codemark.pyz`, ZIP completo e `SHA256SUMS`. É
-determinística no mesmo ambiente e conteúdo. O ZIP contém fontes, testes,
-documentação e executável portátil. Checksums detectam mudanças contra uma
-referência confiável; não autenticam downloads por conta própria.
+The build produces a deterministic portable executable, source staging tree, and SHA-256 manifest. `python3 scripts/build.py --archive` additionally uses installed `zupt` to create a genuine `.zupt` source archive. Read [Contributing](CONTRIBUTING.md) and [Security](SECURITY.md).
 
-Copyright (C) 2026 SecOps CodeMark contributors. Este programa é software
-livre; você pode redistribuí-lo e/ou modificá-lo sob a GNU GPL versão 3 ou,
-a seu critério, qualquer versão posterior. Distribuído sem garantia.
+The documentation site uses static HTML, CSS, and local SVG assets with no JavaScript. Build it with Python's standard library; see [website/README.md](website/README.md).
+
+## Source repositories
+
+- [GitHub · cristiancmoises/codemark](https://github.com/cristiancmoises/codemark)
+- [Codeberg · berkeley/codemark](https://codeberg.org/berkeley/codemark)
+- [Security Ops Forgejo · git.securityops.co](https://git.securityops.co/cristiancmoises/codemark)
+- [Security Ops Forgejo · git.securityops.com.br](https://git.securityops.com.br/cristiancmoises/codemark)
+
+Copyright (C) 2026 CodeMark contributors. Free software under the GNU GPL version 3 or any later version, distributed without warranty. Existing licenses of marked projects remain in force.
