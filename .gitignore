@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.superpowers/
+dist/
+.codemark/
+test-results.txt

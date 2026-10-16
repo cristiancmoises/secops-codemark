@@ -1,0 +1,105 @@
+{
+  "version": "0.2.0",
+  "qualified_at_utc": "2026-10-16T00:36:49.696960+00:00",
+  "status": "qualified-with-scope",
+  "production_ready_scope": "CLI local em GNU/Linux: marcação reversível, integridade, comparação heurística e assinatura OpenSSH Ed25519",
+  "license": "GPL-3.0-or-later",
+  "runtime_commit": "72801ad",
+  "environment": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "python": "3.12.14"
+  },
+  "tests": {
+    "run": 71,
+    "failures": 0,
+    "errors": 0,
+    "real_openssh_tests": 13,
+    "skipped_classes": [
+      {
+        "component": "GPG",
+        "reason": "gpg-agent não pode criar sockets neste ambiente"
+      }
+    ]
+  },
+  "independent_review": {
+    "status": "approved-after-fixes",
+    "report": "REVIEW_0.2.0.md",
+    "unresolved_critical_or_important_findings": 0
+  },
+  "portable": {
+    "file": "codemark.pyz",
+    "bytes": 34754,
+    "sha256": "8fbaefab3f91efecc9ba441dea607a6ec682771d2853ddd717a2f5b456d6e92a",
+    "self_test": {
+      "action": "self-test",
+      "version": "0.2.0",
+      "ok": true,
+      "checks": [
+        {
+          "name": "mark",
+          "status": "pass"
+        },
+        {
+          "name": "verify",
+          "status": "pass"
+        },
+        {
+          "name": "python-runtime",
+          "status": "pass"
+        },
+        {
+          "name": "javascript-runtime",
+          "status": "pass"
+        },
+        {
+          "name": "guile-runtime",
+          "status": "skip",
+          "detail": "Guile não disponível; execução Scheme não testada."
+        },
+        {
+          "name": "openssh-signature",
+          "status": "pass"
+        },
+        {
+          "name": "tamper",
+          "status": "pass"
+        },
+        {
+          "name": "compare",
+          "status": "pass"
+        },
+        {
+          "name": "unmark",
+          "status": "pass"
+        }
+      ],
+      "scope": "Fixtures temporárias de CLI neste host; não certifica projetos ou plataformas.",
+      "note": "Nenhuma chave ou fonte do usuário foi usada. GUI e GPG não são exercitados por este autoteste."
+    }
+  },
+  "migration_from_0.1.0": {
+    "status": "pass",
+    "checks": [
+      "verify existing manifest",
+      "idempotent re-mark",
+      "byte-exact unmark with CRLF and shebang"
+    ]
+  },
+  "not_qualified_here": [
+    "GUI rendering",
+    "GPG",
+    "Windows",
+    "GNU Guix platform",
+    "Guile execution"
+  ],
+  "excluded_guarantees": [
+    "blocking REA or AI reverse engineering",
+    "unremovable watermarks",
+    "legal ownership or timestamp proof",
+    "universal clone detection",
+    "crash recovery after power loss or forced termination"
+  ],
+  "activation": "Read PRODUCTION.md; run self-test on destination and project tests after marking",
+  "release_published_externally": false
+}
