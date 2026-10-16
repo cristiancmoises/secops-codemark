@@ -4,7 +4,7 @@
 
 [English](README.md) · [Documentação](https://codemark.securityops.co/pt-br/docs/) · [Wiki](https://codemark.securityops.co/pt-br/wiki/) · [Evidências da versão](https://codemark.securityops.co/pt-br/evidence/)
 
-Versão **0.4.0** · **GPL-3.0-or-later** · [Licença completa](COPYING)
+Versão **0.4.1** · **GPL-3.0-or-later** · [Licença completa](COPYING)
 
 SecOps Codemark registra SHA-256 e SHA-512 de arquivos regulares de qualquer formato, autentica a referência com **ML-DSA-87 + Ed25519** e encadeia atestações num histórico local verificável. Uma exportação privada explícita pode usar criptografia **Zupt ML-KEM-768 + X25519** para destinatário. Comentários reversíveis de fontes e análise de possíveis cópias continuam separados.
 
@@ -14,7 +14,7 @@ Assinatura não oculta conteúdo, comprova titularidade jurídica nem estabelece
 
 ## Começar pelo snapshot
 
-Baixe `codemark.pyz` ou os fontes públicos em **`secops-codemark-0.4.0.zupt` genuíno sem criptografia** em [Downloads](https://codemark.securityops.co/pt-br/downloads/). Confira SHA-256 contra referência independente confiável. Extraia fontes com Zupt; o portátil Python não precisa de extração.
+Baixe `codemark.pyz` ou os fontes públicos em **`secops-codemark-0.4.1.zupt` genuíno sem criptografia** em [Downloads](https://codemark.securityops.co/pt-br/downloads/). Confira SHA-256 contra referência independente confiável. Extraia fontes com Zupt; o portátil Python não precisa de extração.
 
 ```sh
 python3 codemark.pyz --version
@@ -108,3 +108,7 @@ O site usa HTML, CSS e SVG locais, sem JavaScript, rastreamento ou fontes remota
 - [Security Ops Forgejo · git.securityops.com.br](https://git.securityops.com.br/cristiancmoises/secops-codemark)
 
 Copyright (C) 2026 SecOps Codemark contributors. GPL-3.0-or-later, sem garantia. As licenças existentes dos projetos marcados continuam aplicáveis.
+
+## Confiabilidade de build e lançamento
+
+A versão 0.4.1 reforça o empacotamento dos fontes e as rotas de relatórios do site. Use saídas novas, mantenha material privado fora dos diretórios selecionados e siga o [fluxo de lançamento](docs/pt-BR/releasing.md). Filtros de nomes não provam ausência de segredos no conteúdo dos fontes.

@@ -25,6 +25,7 @@ DOCS = [
     "evidence",
     "security",
     "validation",
+    "releasing",
 ]
 WIKI = ["architecture", "formats", "cryptography", "troubleshooting", "contributing"]
 TEXT = {
@@ -80,6 +81,7 @@ TEXT = {
             "Examples and evaluation",
             "Security model",
             "Validation",
+            "Release a version",
         ],
         "doc_details": [
             "Choose a workflow and inspect your host.",
@@ -92,6 +94,7 @@ TEXT = {
             "Reproducible fixtures, tool comparison and stated use.",
             "What is protected and what remains the operator’s responsibility.",
             "Actual platform results and historical reports.",
+            "Fresh outputs, verified artifacts, CI and rollback.",
         ],
         "wiki_titles": [
             "Architecture",
@@ -194,6 +197,7 @@ TEXT = {
             "Exemplos e avaliação",
             "Modelo de segurança",
             "Validação",
+            "Publicar uma versão",
         ],
         "doc_details": [
             "Escolher o fluxo e conferir o host.",
@@ -206,6 +210,7 @@ TEXT = {
             "Fixtures reproduzíveis, comparação e uso declarado.",
             "Proteções e responsabilidades que permanecem com o operador.",
             "Resultados reais de plataformas e relatórios históricos.",
+            "Saídas novas, artefatos verificados, CI e rollback.",
         ],
         "wiki_titles": [
             "Arquitetura",
@@ -690,6 +695,18 @@ def build(output):
     data = json.loads((SITE / "data/release.json").read_text(encoding="utf-8"))
     if urlsplit(data["site_url"]).scheme != "https":
         raise ValueError("The canonical site URL must use HTTPS")
+    report_names = set()
+    report_stems = set()
+    report_sources = []
+    for report in data["reports"]:
+        source = source_file(report["path"], "docs")
+        if source.name in report_names:
+            raise ValueError("Published report filenames must be unique")
+        if source.stem in report_stems:
+            raise ValueError("Published report route stems must be unique")
+        report_names.add(source.name)
+        report_stems.add(source.stem)
+        report_sources.append(source)
     output.mkdir(parents=True, exist_ok=True)
     for filename in ("styles.css", "favicon.svg"):
         (output / "assets").mkdir(exist_ok=True)
@@ -697,12 +714,7 @@ def build(output):
     shutil.copyfile(ROOT / "COPYING", output / "license.txt")
     (output / "data").mkdir(exist_ok=True)
     shutil.copyfile(SITE / "data/release.json", output / "data/release.json")
-    report_names = set()
-    for report in data["reports"]:
-        source = source_file(report["path"], "docs")
-        if source.name in report_names:
-            raise ValueError("Published report filenames must be unique")
-        report_names.add(source.name)
+    for source in report_sources:
         (output / "reports").mkdir(exist_ok=True)
         shutil.copyfile(source, output / "reports" / source.name)
     for item in data["downloads"]:

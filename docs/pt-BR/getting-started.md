@@ -1,6 +1,6 @@
 # Primeiros passos
 
-SecOps Codemark 0.4.0 inventaria arquivos regulares, autentica a referência com assinaturas híbridas e permite exportação privada criptografada. Comentários reversíveis e comparação de fontes continuam como operações separadas.
+SecOps Codemark 0.4.1 inventaria arquivos regulares, autentica a referência com assinaturas híbridas e permite exportação privada criptografada. Comentários reversíveis e comparação de fontes continuam como operações separadas.
 
 A CLI Python usa biblioteca padrão e funciona localmente. Assinatura híbrida também requer OpenSSL 3.5 com provider padrão. Bundles privados precisam de Zupt compatível. Disponibilidade e cobertura medida de plataformas são informadas separadamente.
 

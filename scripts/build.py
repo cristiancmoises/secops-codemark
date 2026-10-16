@@ -41,26 +41,59 @@ def checksum_entries(entries):
 
 def public_source(path):
     relative = path.relative_to(ROOT)
-    excluded = {"__pycache__", ".git", ".superpowers", "superpowers", "node_modules"}
-    if any(part in excluded for part in relative.parts):
-        return False
+    excluded = {
+        "__pycache__",
+        ".git",
+        ".superpowers",
+        "superpowers",
+        "node_modules",
+        ".codex",
+        ".claude",
+        ".agents",
+        ".env",
+        "credentials.json",
+        "agent.md",
+        "agents.md",
+        "claude.md",
+        "gemini.md",
+        "skill.md",
+        "plan.md",
+        "instructions.md",
+        "task.md",
+        "tasks.md",
+    }
+    for part in relative.parts:
+        lower = part.lower()
+        if (
+            lower in excluded
+            or "prompt" in lower
+            or lower.endswith("-plan.md")
+            or ("agent" in lower and "instruction" in lower)
+        ):
+            return False
     if relative.parts[:2] == ("website", "public"):
         return False
-    return (
-        path.name not in {"AGENTS.md", "CLAUDE.md", "GEMINI.md"}
-        and not path.name.upper().startswith(("PROMPT", "EXECUTION-PROMPT"))
-        and path.suffix != ".pyc"
-    )
+    return path.suffix.lower() != ".pyc"
 
 
 def build(output, *, archive=False):
-    output.mkdir(parents=True, exist_ok=True)
     name = f"secops-codemark-{__version__}"
     destination = output / name
-    if destination.exists() or destination.is_symlink():
+    targets = [destination, output / "codemark.pyz", output / "SHA256SUMS"]
+    if archive:
+        targets.append(output / (name + ".zupt"))
+    for target in targets:
+        if target.exists() or target.is_symlink():
+            raise RuntimeError(
+                "Build target already exists; choose a fresh --output directory: "
+                + target.name
+            )
+    zupt = shutil.which("zupt") if archive else None
+    if archive and not zupt:
         raise RuntimeError(
-            "Source staging already exists; choose a fresh --output directory."
+            "ZUPT is required for --archive; no source archive was created."
         )
+    output.mkdir(parents=True, exist_ok=True)
     sources = {}
     for directory in (
         "codemark",
@@ -71,7 +104,10 @@ def build(output, *, archive=False):
         ".github",
         "website",
     ):
-        for path in sorted((ROOT / directory).rglob("*")):
+        source = ROOT / directory
+        if source.is_symlink():
+            raise RuntimeError("Do not ship symlinks: " + str(source))
+        for path in sorted(source.rglob("*")):
             if path.is_symlink():
                 raise RuntimeError("Do not ship symlinks: " + str(path))
             if path.is_file() and public_source(path):
@@ -105,7 +141,8 @@ def build(output, *, archive=False):
     )
     package["COPYING"] = sources["COPYING"]
     portable = archive_bytes(package, b"#!/usr/bin/env python3\n")
-    (output / "codemark.pyz").write_bytes(portable)
+    with (output / "codemark.pyz").open("xb") as stream:
+        stream.write(portable)
     (output / "codemark.pyz").chmod(0o755)
     sources["codemark.pyz"] = portable
     sources["SHA256SUMS"] = checksum_entries(sources)
@@ -128,12 +165,7 @@ def build(output, *, archive=False):
         stage.rename(destination)
     release_files = {"codemark.pyz": portable}
     result = destination
-    if archive:
-        zupt = shutil.which("zupt")
-        if not zupt:
-            raise RuntimeError(
-                "ZUPT is required for --archive; no source archive was created."
-            )
+    if zupt is not None:
         result = output / (destination.name + ".zupt")
         subprocess.run(
             [zupt, "compress", "-t", "2", result.name, destination.name],
@@ -144,7 +176,8 @@ def build(output, *, archive=False):
         subprocess.run([zupt, "test", str(result)], check=True, timeout=120)
         release_files[result.name] = result.read_bytes()
     checksums = output / "SHA256SUMS"
-    checksums.write_bytes(checksum_entries(release_files))
+    with checksums.open("xb") as stream:
+        stream.write(checksum_entries(release_files))
     checksums.chmod(0o644)
     return result
 

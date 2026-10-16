@@ -43,6 +43,126 @@ class PortablePackageTests(unittest.TestCase):
                 builder.build(output)
             self.assertFalse((output / "codemark.pyz").exists())
 
+    def test_selected_source_directory_symlinks_are_rejected(self):
+        builder = self.builder()
+        for name in ("codemark", "docs"):
+            with (
+                self.subTest(directory=name),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                base = Path(directory)
+                root = base / "source"
+                root.mkdir()
+                (root / "COPYING").write_text("test license")
+                private = base / "private"
+                private.mkdir()
+                (private / "private.py").write_text("never publish this")
+                try:
+                    (root / name).symlink_to(private, target_is_directory=True)
+                except (OSError, NotImplementedError):
+                    self.skipTest("Creating symlinks is unavailable on this platform")
+                output = base / "output"
+                with (
+                    patch.object(builder, "ROOT", root),
+                    self.assertRaises(RuntimeError),
+                ):
+                    builder.build(output)
+                self.assertFalse((output / "codemark.pyz").exists())
+
+    def test_existing_generated_files_are_rejected_before_any_artifact_write(self):
+        builder = self.builder()
+        names = ("codemark.pyz", "SHA256SUMS", f"secops-codemark-{__version__}.zupt")
+        for name in names:
+            with (
+                self.subTest(artifact=name),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                base = Path(directory)
+                root = base / "source"
+                (root / "codemark").mkdir(parents=True)
+                (root / "COPYING").write_text("test license")
+                output = base / "output"
+                output.mkdir()
+                existing = output / name
+                existing.write_bytes(b"existing release artifact")
+                with (
+                    patch.object(builder, "ROOT", root),
+                    patch.object(builder.shutil, "which", return_value=None),
+                    self.assertRaisesRegex(RuntimeError, "fresh --output"),
+                ):
+                    builder.build(output, archive=name.endswith(".zupt"))
+                self.assertEqual(existing.read_bytes(), b"existing release artifact")
+                self.assertEqual({path.name for path in output.iterdir()}, {name})
+
+    def test_output_artifact_symlinks_cannot_overwrite_external_files(self):
+        builder = self.builder()
+        names = ("codemark.pyz", "SHA256SUMS", f"secops-codemark-{__version__}.zupt")
+        for name in names:
+            with (
+                self.subTest(artifact=name),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                base = Path(directory)
+                root = base / "source"
+                (root / "codemark").mkdir(parents=True)
+                (root / "COPYING").write_text("test license")
+                private = base / "private-data"
+                private.write_bytes(b"never overwrite this")
+                private.chmod(0o600)
+                original_mode = stat.S_IMODE(private.stat().st_mode)
+                output = base / "output"
+                output.mkdir()
+                try:
+                    (output / name).symlink_to(private)
+                except (OSError, NotImplementedError):
+                    self.skipTest("Creating symlinks is unavailable on this platform")
+                with (
+                    patch.object(builder, "ROOT", root),
+                    patch.object(builder.shutil, "which", return_value=None),
+                    self.assertRaisesRegex(RuntimeError, "fresh --output"),
+                ):
+                    builder.build(output, archive=name.endswith(".zupt"))
+                self.assertEqual(private.read_bytes(), b"never overwrite this")
+                if os.name == "posix":
+                    self.assertEqual(
+                        stat.S_IMODE(private.stat().st_mode), original_mode
+                    )
+                self.assertEqual({path.name for path in output.iterdir()}, {name})
+
+    def test_dangling_output_symlink_is_rejected_without_creating_its_target(self):
+        builder = self.builder()
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "source"
+            (root / "codemark").mkdir(parents=True)
+            (root / "COPYING").write_text("test license")
+            output = base / "output"
+            output.mkdir()
+            missing = base / "missing-private-target"
+            try:
+                (output / "codemark.pyz").symlink_to(missing)
+            except (OSError, NotImplementedError):
+                self.skipTest("Creating symlinks is unavailable on this platform")
+            with patch.object(builder, "ROOT", root), self.assertRaises(RuntimeError):
+                builder.build(output)
+            self.assertFalse(missing.exists())
+
+    def test_missing_archiver_is_rejected_before_output_directory_creation(self):
+        builder = self.builder()
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "source"
+            (root / "codemark").mkdir(parents=True)
+            (root / "COPYING").write_text("test license")
+            output = base / "output"
+            with (
+                patch.object(builder, "ROOT", root),
+                patch.object(builder.shutil, "which", return_value=None),
+                self.assertRaisesRegex(RuntimeError, "ZUPT is required"),
+            ):
+                builder.build(output, archive=True)
+            self.assertFalse(output.exists())
+
     def test_source_staging_excludes_local_execution_instructions(self):
         builder = self.builder()
         with tempfile.TemporaryDirectory() as directory:
@@ -56,6 +176,14 @@ class PortablePackageTests(unittest.TestCase):
                 "docs/superpowers/plan.md",
                 "docs/AGENTS.md",
                 "website/public/stale.html",
+                "docs/.codex/skills/fixture/SKILL.md",
+                "scripts/.claude/local.md",
+                "examples/.agents/local.md",
+                "docs/private-task-prompt.md",
+                "docs/release-plan.md",
+                "docs/agent-instructions.txt",
+                "docs/agent.md",
+                "docs/SKILL.md",
             ):
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -69,6 +197,12 @@ class PortablePackageTests(unittest.TestCase):
                 if path.is_file()
             }
             self.assertIn("docs/public.md", names)
+            self.assertFalse(
+                any(
+                    "private instructions" in path.read_text()
+                    for path in package.rglob("*.md")
+                )
+            )
             self.assertFalse(
                 any(
                     "PROMPT" in name

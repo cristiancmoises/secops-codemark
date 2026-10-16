@@ -25,7 +25,7 @@ Jobs Windows usam `py -3`, caminhos nativos entre aspas e ferramentas externas c
 
 ## Exemplo reutilizável de pipeline
 
-O repositório inclui uma [etapa shell de verificação](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.0/examples/pipeline/verify-release.sh), um [workflow manual GitHub Actions](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.0/examples/pipeline/verify-release.yml) e [orientação de configuração](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.0/examples/pipeline/README.md).
+O repositório inclui uma [etapa shell de verificação](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.1/examples/pipeline/verify-release.sh), um [workflow manual GitHub Actions](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.1/examples/pipeline/verify-release.yml) e [orientação de configuração](https://github.com/cristiancmoises/secops-codemark/blob/v0.4.1/examples/pipeline/README.md).
 
 A etapa exige seis valores protegidos: `CODEMARK_PYZ`, `RELEASE_DIR`, `PQ_FINGERPRINT`, `CLASSICAL_FINGERPRINT`, `CHECKPOINT` e `AUDIT_REPORT`. Forneça portátil com checksum conferido, árvore preparada e OpenSSL 3.5 compatível. Precisa de referências públicas de confiança, não de chave privada.
 
@@ -88,3 +88,5 @@ guix shell python -- python3 codemark.pyz doctor --json
 ```
 
 Assinatura híbrida precisa de OpenSSL compatível, assinatura legada das ferramentas correspondentes e bundles de Zupt. São requisitos de ambiente, não afirmação de pacote Guix ou todas as plataformas qualificadas. A GUI opcional precisa de Tkinter e sessão gráfica e atende comentários legados.
+
+Para empacotar e publicar o próprio SecOps Codemark, siga o [fluxo de lançamento](releasing.md). Os tempos históricos acima preservam a carga e a revisão originais.

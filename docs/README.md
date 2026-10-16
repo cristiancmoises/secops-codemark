@@ -23,3 +23,6 @@
 The original uppercase production, validation, qualification, and review documents are historical records for earlier versions. The 0.3.0 records in `docs/reports/` are also historical. Read their dates and scopes; they are not current qualification for changed source. The release metadata identifies current 0.4.0 evidence separately.
 
 Os documentos originais de produção, validação, qualificação e revisão em maiúsculas são registros históricos de versões anteriores. Os registros 0.3.0 em `docs/reports/` também são históricos. Leia datas e escopos; eles não qualificam fontes alterados. Os metadados identificam separadamente as evidências atuais da 0.4.0.
+
+- [Release workflow (English)](en/releasing.md)
+- [Fluxo de lançamento (Português brasileiro)](pt-BR/releasing.md)

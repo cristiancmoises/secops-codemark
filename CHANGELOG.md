@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.1 — 2026-10-16
+
+- Reject linked source roots and conflicting output artifacts before packaging.
+- Exclude nested private instructions and execution material from source staging.
+- Check archive-tool availability before creating release output.
+- Reject colliding report routes before generating website files.
+- Document fresh-output packaging, download staging and publication gates in
+  English and Brazilian Portuguese.
+
 ## 0.4.0 — 2026-10-16
 
 - Rename the project to SecOps Codemark while retaining the `codemark` CLI.

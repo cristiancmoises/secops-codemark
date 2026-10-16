@@ -7,11 +7,13 @@ The production origin is `https://codemark.securityops.co`. The site is prebuilt
 Run from the repository root with Python 3.10 or newer:
 
 ```sh
-python3 scripts/build_site.py --check
-python3 -m http.server 8000 --bind 127.0.0.1 --directory website/public
+python3 scripts/build_site.py --output /tmp/secops-codemark-site-0.4.1
+python3 -m http.server 8000 --bind 127.0.0.1 --directory /tmp/secops-codemark-site-0.4.1
 ```
 
-Open `http://127.0.0.1:8000/`. `--check` builds the site and verifies local links and anchors, unique element IDs, one h1 per page, and the absence of script tags, event-handler attributes, and external assets in the generated documents. It also checks local SVG files for active content. It does not replace a browser accessibility or visual check.
+Open `http://127.0.0.1:8000/` for a documentation preview. Before strict validation or publication, build the genuine release archive and stage all three declared downloads using the [release workflow](../docs/en/releasing.md). Then run `python3 scripts/build_site.py --output /tmp/secops-codemark-site-0.4.1 --check`. Missing local downloads must fail the check.
+
+`--check` builds the site and verifies local links and anchors, unique element IDs, one h1 per page, and the absence of script tags, event-handler attributes, and external assets in the generated documents. It also checks local SVG files for active content. It does not replace a browser accessibility or visual check.
 
 Use `--output /path/to/staging` for an alternative output directory. Generated output is not source and is ignored by Git. The builder overwrites its generated files; it does not delete existing downloads. Use a new staging directory when preparing a clean deployment.
 
@@ -40,7 +42,7 @@ The metadata contract is:
 
 ```json
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "date": "YYYY-MM-DD",
   "commit": "source revision or immutable release reference",
   "site_url": "https://codemark.securityops.co",
@@ -49,15 +51,15 @@ The metadata contract is:
   "repositories": [{"label": "Repository", "url": "https://example.org/project"}],
   "checks": [{"name": "Check", "status": "pending", "detail": "Exact scope", "command": "optional command"}],
   "metrics": [{"label": "Metric", "value": "Measured value", "detail": "Measurement boundary"}],
-  "reports": [{"title": "Report", "path": "docs/reports/0.4.0-validation.json", "date": "YYYY-MM-DD", "scope": "Exact scope", "status": "current"}],
+  "reports": [{"title": "Report", "path": "docs/reports/0.4.1-validation.json", "date": "YYYY-MM-DD", "scope": "Exact scope", "status": "current"}],
   "downloads": [
     {"label": "Portable", "url": "/downloads/codemark.pyz", "path": "dist/codemark.pyz"},
-    {"label": "0.4.0 source", "url": "/downloads/secops-codemark-0.4.0.zupt", "path": "dist/secops-codemark-0.4.0.zupt"}
+    {"label": "0.4.1 source", "url": "/downloads/secops-codemark-0.4.1.zupt", "path": "dist/secops-codemark-0.4.1.zupt"}
   ]
 }
 ```
 
-Allowed statuses are `pass`, `fail`, `skip`, `pending`, `historical`, `current`, and `qualified-with-scope`. A report must be a regular file below `docs/`, without symlinks. Filenames must be unique. Original files are copied to `/reports/` and readable report pages are generated in both languages. Historical records retain their original contents and get a visible context notice.
+Allowed statuses are `pass`, `fail`, `skip`, `pending`, `historical`, `current`, and `qualified-with-scope`. A report must be a regular file below `docs/`, without symlinks. Filenames and report route stems must both be unique, including across different extensions. Validation happens before output is written. Original files are copied to `/reports/` and readable report pages are generated in both languages. Historical records retain their original contents and get a visible context notice.
 
 A download's optional `path` copies a regular file from `dist/` to `/downloads/`; its URL must match that filename. Without `path`, the release process must stage the file at the declared local URL before `--check`. Genuine `.zupt` archives, archive testing, extraction comparison, and checksums belong to the release build; the website builder does not create packages.
 
@@ -79,6 +81,6 @@ Verify the deployed root, both languages, documentation links, reports, artifact
 
 ## Português brasileiro
 
-O site é HTML/CSS/SVG estático, sem JavaScript, analytics ou fontes externas. Gere e confira com `python3 scripts/build_site.py --check`; visualize usando o servidor local acima. Os fontes bilíngues ficam em `docs/en` e `docs/pt-BR`.
+O site é HTML/CSS/SVG estático, sem JavaScript, analytics ou fontes externas. Gere a prévia com o comando acima e use o servidor local para visualização. Antes de `--check` ou publicação, gere o pacote e prepare os três downloads conforme o [fluxo de lançamento](../docs/pt-BR/releasing.md). Downloads locais ausentes precisam reprovar a validação. Os fontes bilíngues ficam em `docs/en` e `docs/pt-BR`.
 
 Registre somente resultados medidos em `website/data/release.json`. Preserve escopo, datas, falhas e ausências. Publique apenas `website/public`, com HTTPS, tipos MIME corretos e política que bloqueie scripts. Confira páginas, relatórios e checksums após o deploy. Mantenha a versão anterior para rollback.

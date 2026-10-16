@@ -6,12 +6,13 @@ Use Python 3.10 or newer. Base runtime code uses the standard library; hybrid si
 
 ```sh
 python3 -m unittest discover -s tests -v
-python3 scripts/build.py
-python3 -I dist/codemark.pyz self-test --json
-python3 scripts/build_site.py --check
+python3 scripts/build.py --output /tmp/codemark-development-package
+python3 -I /tmp/codemark-development-package/codemark.pyz self-test --json
 ```
 
-Read failures and optional-tool skips. A skip does not qualify a component. Package isolation should be checked outside the source checkout. Creating a genuine source release additionally requires installed `zupt` and `python3 scripts/build.py --archive`; inspect and test the archive before publication.
+Use a new output directory for each build. For a strict website check, prepare the declared downloads first using the [release workflow](docs/en/releasing.md); a package-free preview does not qualify release downloads.
+
+Read failures and optional-tool skips. A skip does not qualify a component. Package isolation should be checked outside the source checkout. Creating a genuine source release additionally requires installed `zupt` and `python3 scripts/build.py --output /a/new/output --archive`; inspect and test the archive before publication.
 
 Keep source byte preservation, protected prologues, resource ceilings, known exclusions, metadata validation, signature pinning, report durability, and rollback behavior intact. Do not disable tests or weaken controls to get a passing build. Keep test keys ephemeral and project fixtures synthetic.
 
@@ -33,4 +34,4 @@ Contributions must be compatible with GPL-3.0-or-later. Preserve existing notice
 
 ## Português brasileiro
 
-Use Python 3.10+, fixtures sintéticas e chaves efêmeras. Execute os comandos acima e registre falhas e ausências. Preserve bytes, limites, validação de metadados, pinagem de chaves e rollback. Atualize a documentação em inglês e português. Não publique prompts privados, instruções de execução, credenciais ou históricos. As contribuições precisam ser compatíveis com GPL-3.0-or-later.
+Use Python 3.10+, fixtures sintéticas e chaves efêmeras. Execute os comandos acima em uma saída nova e registre falhas e ausências. Prepare os downloads antes de `--check`, conforme o [fluxo de lançamento](docs/pt-BR/releasing.md). Preserve bytes, limites, validação de metadados, pinagem de chaves e rollback. Atualize a documentação em inglês e português. Não publique prompts privados, instruções de execução, credenciais ou históricos. As contribuições precisam ser compatíveis com GPL-3.0-or-later.

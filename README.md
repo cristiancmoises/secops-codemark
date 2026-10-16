@@ -4,7 +4,7 @@
 
 [Português brasileiro](README.pt-BR.md) · [Documentation](https://codemark.securityops.co/en/docs/) · [Wiki](https://codemark.securityops.co/en/wiki/) · [Release evidence](https://codemark.securityops.co/en/evidence/)
 
-Version **0.4.0** · **GPL-3.0-or-later** · [Full license](COPYING)
+Version **0.4.1** · **GPL-3.0-or-later** · [Full license](COPYING)
 
 SecOps Codemark records SHA-256 and SHA-512 for regular files of any format, authenticates their saved reference with **ML-DSA-87 + Ed25519**, and links attestations into a verifiable local history. An explicit private export can use **Zupt ML-KEM-768 + X25519** recipient encryption. Reversible source comments and source-copy candidate analysis remain separate tools.
 
@@ -14,7 +14,7 @@ A signature does not hide content, prove legal ownership, or establish a trusted
 
 ## Start with a file snapshot
 
-Download `codemark.pyz` or the genuine **unencrypted** `secops-codemark-0.4.0.zupt` public source archive from [Downloads](https://codemark.securityops.co/en/downloads/). Verify SHA-256 checksums against an independently trusted reference. Extract source releases with Zupt; the Python portable does not need extraction.
+Download `codemark.pyz` or the genuine **unencrypted** `secops-codemark-0.4.1.zupt` public source archive from [Downloads](https://codemark.securityops.co/en/downloads/). Verify SHA-256 checksums against an independently trusted reference. Extract source releases with Zupt; the Python portable does not need extraction.
 
 ```sh
 python3 codemark.pyz --version
@@ -108,3 +108,7 @@ The site uses static HTML, CSS and local SVG with no JavaScript, tracking or rem
 - [Security Ops Forgejo · git.securityops.com.br](https://git.securityops.com.br/cristiancmoises/secops-codemark)
 
 Copyright (C) 2026 SecOps Codemark contributors. GPL-3.0-or-later, without warranty. Existing licenses of marked projects remain applicable.
+
+## Build and release reliability
+
+Version 0.4.1 hardens source packaging and website report routing. Use fresh build outputs, keep private material outside the selected source directories and follow the [release workflow](docs/en/releasing.md). Filename screening does not prove that source contents contain no secrets.

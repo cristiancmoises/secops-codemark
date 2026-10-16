@@ -8,16 +8,17 @@ The website's Evidence page is generated from `website/data/release.json`. Resul
 
 Do not carry a previous version's passing counts or qualification forward as evidence for changed source. Optional-tool skips remain visible. Agent review is identified as agent review and does not claim an external professional audit or certification.
 
-Version 0.4.0 adds all-regular-file snapshots, ML-DSA-87 + Ed25519 attestations, linked history and explicit encrypted private bundles. Current tests, native providers, platform jobs and artifact checks must be measured for this source; earlier passing counts are not carried forward.
+Version 0.4.1 corrects release packaging and website report routing while preserving the 0.4.0 runtime formats. It has its own test, portable and review records. Native-tool and platform qualification must identify the exact measured source.
 
 ## Reproduce locally
 
 ```sh
 python3 -m unittest discover -s tests -v
-python3 scripts/build.py
-python3 -I dist/codemark.pyz self-test --json
-python3 scripts/build_site.py --check
+python3 scripts/build.py --output /tmp/codemark-validation-0.4.1
+python3 -I /tmp/codemark-validation-0.4.1/codemark.pyz self-test --json
 ```
+
+Use a new output directory for each build. Stage the release downloads before running the strict website check; see the [release workflow](releasing.md).
 
 Use the build script's actual dependencies and read any unavailable-tool errors. Execute the portable outside the repository when testing package isolation. Build reproducibility applies to the same source and declared environment; do not infer cross-platform bit-for-bit reproducibility.
 
@@ -26,6 +27,10 @@ Use the build script's actual dependencies and read any unavailable-tool errors.
 The repository contains tests for reversible marking, byte preservation, token candidates, metadata and report failures, all-file inventory, limits, package isolation, hybrid signatures, independent key pins and linked-history checks. Consult the current logs for the exact executed cases, tool versions and skips. Private-export and platform results must be recorded separately.
 
 The self-test creates temporary fixtures and ephemeral keys. It can execute language fixtures only when their toolchains are available. It does not exercise arbitrary user projects, all supported languages, a hostile operating system, GUI rendering, or legal claims.
+
+## Historical 0.4.0 record
+
+The 0.4.0 [qualification](../reports/0.4.0-validation.json), [test log](../reports/0.4.0-tests.txt), [portable checks](../reports/0.4.0-self-test.json) and [focused review](../reports/0.4.0-review.md) retain their original source revisions and scope. Its similarity and pipeline measurements remain historical experiments, with their exact tool and source hashes. They do not replace 0.4.1 release checks.
 
 ## Historical 0.3.0 record
 
@@ -37,7 +42,7 @@ These records apply to version 0.3.0 and are dated **2026-10-16 UTC**. Its recor
 - [Focused source and packaging review](../reports/0.3.0-review.md)
 - [Website validation](../reports/0.3.0-website.json)
 
-The 0.3.0 record reports 81 GNU/Linux tests and nine portable checks. Those results apply to the original source and environment, not the changed 0.4.0 source.
+The 0.3.0 record reports 81 GNU/Linux tests and nine portable checks. Those results apply to the original source and environment, not changed source in later releases.
 
 ## Historical 0.2.0 record
 

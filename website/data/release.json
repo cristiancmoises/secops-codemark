@@ -1,12 +1,12 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "date": "2026-10-16",
-  "commit": "v0.4.0",
+  "commit": "v0.4.1",
   "site_url": "https://codemark.securityops.co",
-  "status": "qualified-with-scope",
+  "status": "pending",
   "scope": {
-    "en": "0.4.0: qualified all-regular-file inventories, dual ML-DSA-87/Ed25519 attestations, external checkpoints and recipient-encrypted exports. Reports identify exact revisions, measured fixtures and platform limits. Final release CI and artifact receipts are linked from the repository release.",
-    "pt-br": "0.4.0: inventários de todos os regulares, atestações ML-DSA-87/Ed25519, checkpoints externos e exportações criptografadas verificados. Os relatórios identificam revisões, fixtures medidas e limites de plataforma. CI final e verificação dos pacotes estão vinculados ao lançamento no repositório."
+    "en": "0.4.1 release-tooling corrections: source-root links, output preservation, private instruction filtering and report-route collisions. New source qualification is pending; 0.4.0 experiments retain their original scope.",
+    "pt-br": "Correções 0.4.1: links nas raízes de fonte, preservação de saídas, exclusão de instruções privadas e colisões de rotas. A qualificação dos novos fontes está pendente; experimentos 0.4.0 preservam o escopo original."
   },
   "repositories": [
     {
@@ -32,10 +32,10 @@
         "en": "All-file integrity",
         "pt-br": "Integridade de todos os regulares"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "GNU/Linux: 175 tests passed, zero skipped. Coverage includes extensionless files, JSON, documentation, binaries and streamed ISO fixtures.",
-        "pt-br": "GNU/Linux: 175 testes passaram, sem ignorados. Cobertura inclui arquivos sem extensão, JSON, documentação, binários e fixtures ISO lidas em blocos."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       },
       "command": "python3 -m unittest discover -s tests -v"
     },
@@ -44,10 +44,10 @@
         "en": "Hybrid authentication and history",
         "pt-br": "Autenticação híbrida e histórico"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Real OpenSSL 3.5.7: both ML-DSA-87 and Ed25519 signatures, independent pins, tampering, key rotation, history and rollback checkpoints passed.",
-        "pt-br": "OpenSSL 3.5.7 real: ambas as assinaturas, chaves independentes, adulteração, rotação, histórico e checkpoints passaram."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       }
     },
     {
@@ -55,10 +55,10 @@
         "en": "Private encrypted export",
         "pt-br": "Exportação privada criptografada"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Native Zupt 5.2.10 encryption, recipient pins and exact restored bytes passed, including wrong-key, tamper, race and rollback rejection tests.",
-        "pt-br": "Criptografia Zupt 5.2.10, destinatários fixados e bytes restaurados passaram, incluindo rejeição de chave incorreta, adulteração, races e rollback."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       }
     },
     {
@@ -66,10 +66,10 @@
         "en": "Linux and Windows CI",
         "pt-br": "CI Linux e Windows"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Six jobs: Linux and Windows with Python 3.10, 3.12 and 3.14. Native optional-provider qualification is recorded separately. The final release requires its own passing complete-source matrix.",
-        "pt-br": "Seis jobs: Linux e Windows com Python 3.10, 3.12 e 3.14. Providers nativos opcionais têm qualificação separada. O lançamento exige sua própria matriz aprovada dos fontes completos."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       }
     },
     {
@@ -77,10 +77,10 @@
         "en": "Portable checks",
         "pt-br": "Verificações portáteis"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Rebuilt portable passed 11 isolated smoke checks outside the source tree, including full-file integrity and real hybrid authentication.",
-        "pt-br": "Portátil reconstruído passou em 11 verificações isoladas fora dos fontes, incluindo integridade completa e autenticação híbrida real."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       },
       "command": "python3 -I codemark.pyz self-test --json"
     },
@@ -89,10 +89,10 @@
         "en": "Source review and static checks",
         "pt-br": "Revisão e verificações estáticas"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Focused source review and regressions completed; Ruff, formatting, Pyright and selected-source secret scan passed. No independent external audit is claimed.",
-        "pt-br": "Revisão focal e regressões concluídas; Ruff, formatação, Pyright e varredura limitada dos fontes passaram. Não representa auditoria externa independente."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       }
     },
     {
@@ -100,10 +100,10 @@
         "en": "Website validation",
         "pt-br": "Validação do site"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Local preview passed 251 viewport cases and keyboard/contrast checks. Final downloads, generated links and public availability are separate gates.",
-        "pt-br": "Prévia local passou em 251 casos de viewport e verificações de teclado/contraste. Downloads finais, links e disponibilidade pública são etapas separadas."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       },
       "command": "python3 scripts/build_site.py --check"
     },
@@ -112,10 +112,10 @@
         "en": "Public release archive",
         "pt-br": "Pacote público da versão"
       },
-      "status": "pass",
+      "status": "pending",
       "detail": {
-        "en": "Publication requires a genuine unencrypted .zupt, zupt test, SHA-256 checksums and extracted-byte comparison against the annotated tag. Zupt 5.2.10 does not restore POSIX modes.",
-        "pt-br": "Publicação exige .zupt genuíno sem criptografia, zupt test, SHA-256 e comparação dos bytes extraídos com a tag anotada. Zupt 5.2.10 não restaura permissões POSIX."
+        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
+        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
       },
       "command": "python3 scripts/build.py --output dist --archive"
     }
@@ -126,7 +126,7 @@
         "en": "Current tests",
         "pt-br": "Testes atuais"
       },
-      "value": "175",
+      "value": "pending",
       "detail": {
         "en": "GNU/Linux: zero failed or skipped; platform CI recorded separately.",
         "pt-br": "GNU/Linux: sem falhas ou ignorados; CI por plataforma registrada separadamente."
@@ -169,120 +169,120 @@
   "reports": [
     {
       "title": {
-        "en": "0.4.0 qualification",
-        "pt-br": "Qualificação 0.4.0"
+        "en": "0.4.0 qualification · historical",
+        "pt-br": "Qualificação 0.4.0 · histórico"
       },
       "path": "docs/reports/0.4.0-validation.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
-        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+        "en": "Historical 0.4.0 record. Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Registro histórico 0.4.0. Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.4.0 complete test log",
-        "pt-br": "Log completo dos testes 0.4.0"
+        "en": "0.4.0 complete test log · historical",
+        "pt-br": "Log completo dos testes 0.4.0 · histórico"
       },
       "path": "docs/reports/0.4.0-tests.txt",
       "date": "2026-10-16",
       "scope": {
-        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
-        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+        "en": "Historical 0.4.0 record. Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Registro histórico 0.4.0. Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.4.0 portable checks",
-        "pt-br": "Verificações portáteis 0.4.0"
+        "en": "0.4.0 portable checks · historical",
+        "pt-br": "Verificações portáteis 0.4.0 · histórico"
       },
       "path": "docs/reports/0.4.0-self-test.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Eleven isolated checks of the qualified portable; exact artifact hash in the qualification report.",
-        "pt-br": "Onze verificações isoladas do portátil qualificado; hash exato no relatório de qualificação."
+        "en": "Historical 0.4.0 record. Eleven isolated checks of the qualified portable; exact artifact hash in the qualification report.",
+        "pt-br": "Registro histórico 0.4.0. Onze verificações isoladas do portátil qualificado; hash exato no relatório de qualificação."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.4.0 focused security review",
-        "pt-br": "Revisão de segurança 0.4.0"
+        "en": "0.4.0 focused security review · historical",
+        "pt-br": "Revisão de segurança 0.4.0 · histórico"
       },
       "path": "docs/reports/0.4.0-review.md",
       "date": "2026-10-16",
       "scope": {
-        "en": "Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
-        "pt-br": "Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
+        "en": "Historical 0.4.0 record. Runtime e3a75b8, packaging f5f3a0f: qualified GNU/Linux fixtures; exact hashes and scope in the reports.",
+        "pt-br": "Registro histórico 0.4.0. Runtime e3a75b8, pacote f5f3a0f: fixtures GNU/Linux verificadas; hashes e escopo exatos nos relatórios."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "0.4.0 website preview validation",
-        "pt-br": "Validação da prévia do site 0.4.0"
+        "en": "0.4.0 website preview validation · historical",
+        "pt-br": "Validação da prévia do site 0.4.0 · histórico"
       },
       "path": "docs/reports/0.4.0-website.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Local preview: 251 viewport cases over 77 pages; keyboard, contrast and reduced motion. Downloads and live deployment verified separately.",
-        "pt-br": "Prévia local: 251 casos de viewport em 77 páginas; teclado, contraste e movimento reduzido. Downloads e publicação verificados separadamente."
+        "en": "Historical 0.4.0 record. Local preview: 251 viewport cases over 77 pages; keyboard, contrast and reduced motion. Downloads and live deployment verified separately.",
+        "pt-br": "Registro histórico 0.4.0. Prévia local: 251 casos de viewport em 77 páginas; teclado, contraste e movimento reduzido. Downloads e publicação verificados separadamente."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "Similarity comparison: method and limits",
-        "pt-br": "Comparação de similaridade: método e limites"
+        "en": "Similarity comparison: method and limits · historical",
+        "pt-br": "Comparação de similaridade: método e limites · histórico"
       },
       "path": "docs/reports/0.4.0/similarity-review.md",
       "date": "2026-10-16",
       "scope": {
-        "en": "Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
-        "pt-br": "Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
+        "en": "Historical 0.4.0 record. Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
+        "pt-br": "Registro histórico 0.4.0. Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "Similarity comparison: raw results",
-        "pt-br": "Comparação de similaridade: resultados brutos"
+        "en": "Similarity comparison: raw results · historical",
+        "pt-br": "Comparação de similaridade: resultados brutos · histórico"
       },
       "path": "docs/reports/0.4.0/similarity-results.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
-        "pt-br": "Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
+        "en": "Historical 0.4.0 record. Frozen Python corpus, pinned JPlag 6.3.0 and Copydetect 0.5.0; raw scores and failures retained. No general ranking.",
+        "pt-br": "Registro histórico 0.4.0. Corpus Python congelado, JPlag 6.3.0 e Copydetect 0.5.0 fixados; pontuações e falhas preservadas. Sem ranking geral."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "Integration effort worksheet",
-        "pt-br": "Planilha de esforço de integração"
+        "en": "Integration effort worksheet · historical",
+        "pt-br": "Planilha de esforço de integração · histórico"
       },
       "path": "docs/reports/0.4.0/integration-effort-template.csv",
       "date": "2026-10-16",
       "scope": {
-        "en": "Blank worksheet for operator observations; no human setup time is claimed.",
-        "pt-br": "Planilha em branco para observações do operador; não afirma tempo humano de implantação."
+        "en": "Historical 0.4.0 record. Blank worksheet for operator observations; no human setup time is claimed.",
+        "pt-br": "Registro histórico 0.4.0. Planilha em branco para observações do operador; não afirma tempo humano de implantação."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
-        "en": "Reproducible pipeline measurements",
-        "pt-br": "Medições reproduzíveis do pipeline"
+        "en": "Reproducible pipeline measurements · historical",
+        "pt-br": "Medições reproduzíveis do pipeline · histórico"
       },
       "path": "docs/reports/0.4.0/pipeline-results.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Five local repeats on a 2,097,184-byte fixture; raw samples, hashes and failure scenarios.",
-        "pt-br": "Cinco repetições locais em fixture de 2.097.184 bytes; amostras, hashes e cenários de falha."
+        "en": "Historical 0.4.0 record. Five local repeats on a 2,097,184-byte fixture; raw samples, hashes and failure scenarios.",
+        "pt-br": "Registro histórico 0.4.0. Cinco repetições locais em fixture de 2.097.184 bytes; amostras, hashes e cenários de falha."
       },
-      "status": "current"
+      "status": "historical"
     },
     {
       "title": {
@@ -408,8 +408,8 @@
       "url": "/downloads/codemark.pyz"
     },
     {
-      "label": "secops-codemark-0.4.0.zupt",
-      "url": "/downloads/secops-codemark-0.4.0.zupt"
+      "label": "secops-codemark-0.4.1.zupt",
+      "url": "/downloads/secops-codemark-0.4.1.zupt"
     },
     {
       "label": "SHA256SUMS",

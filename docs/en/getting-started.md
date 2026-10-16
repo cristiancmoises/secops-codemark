@@ -1,6 +1,6 @@
 # Get started
 
-SecOps Codemark 0.4.0 inventories regular files, authenticates their reference with hybrid signatures, and can create an encrypted private export. Reversible source comments and source-copy comparison remain available as separate operations.
+SecOps Codemark 0.4.1 inventories regular files, authenticates their reference with hybrid signatures, and can create an encrypted private export. Reversible source comments and source-copy comparison remain available as separate operations.
 
 The Python CLI uses the standard library and runs locally. Hybrid signing additionally requires OpenSSL 3.5 with the default provider. Private bundles require compatible Zupt. Availability and measured platform coverage are reported separately.
 

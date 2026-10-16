@@ -8,16 +8,17 @@ A página de Evidências do site é gerada por `website/data/release.json`. Resu
 
 Não reutilize contagens ou qualificação de uma versão anterior como evidência de fontes modificados. Ausências opcionais continuam visíveis. Revisão por agente é identificada como tal e não afirma auditoria profissional externa ou certificação.
 
-A versão 0.4.0 adiciona snapshots de regulares, atestações ML-DSA-87 + Ed25519, histórico encadeado e bundles privados explicitamente criptografados. Testes, providers nativos, plataformas e artefatos precisam ser medidos para estes fontes; contagens anteriores não são transferidas.
+A versão 0.4.1 corrige o empacotamento do release e as rotas de relatórios do site, preservando os formatos de runtime da 0.4.0. Há registros próprios de testes, portátil e revisão. Providers nativos e plataformas precisam identificar os fontes realmente medidos.
 
 ## Reproduzir localmente
 
 ```sh
 python3 -m unittest discover -s tests -v
-python3 scripts/build.py
-python3 -I dist/codemark.pyz self-test --json
-python3 scripts/build_site.py --check
+python3 scripts/build.py --output /tmp/codemark-validation-0.4.1
+python3 -I /tmp/codemark-validation-0.4.1/codemark.pyz self-test --json
 ```
+
+Use um diretório de saída novo em cada build. Prepare os downloads antes da verificação estrita do site; consulte o [fluxo de lançamento](releasing.md).
 
 Use as dependências reais do build e leia erros de ferramentas ausentes. Execute o portátil fora do repositório ao testar isolamento. Reprodutibilidade se aplica ao mesmo fonte e ambiente declarado; não implica igualdade binária entre plataformas.
 
@@ -26,6 +27,10 @@ Use as dependências reais do build e leia erros de ferramentas ausentes. Execut
 O repositório tem testes de comentários reversíveis, bytes, candidatos de tokens, metadados e falhas de relatórios, inventário completo, tetos, isolamento, assinaturas híbridas, chaves fixadas e histórico encadeado. Consulte os logs atuais para casos executados, versões e ausências. Exportação privada e plataformas precisam de registros próprios.
 
 O autoteste cria fixtures temporárias e chaves efêmeras. Executa linguagens apenas quando suas ferramentas estão disponíveis. Não exercita projetos arbitrários, todas as linguagens, sistema operacional hostil, renderização da GUI ou alegações jurídicas.
+
+## Registro histórico da 0.4.0
+
+A [qualificação](../reports/0.4.0-validation.json), o [log de testes](../reports/0.4.0-tests.txt), as [verificações portáteis](../reports/0.4.0-self-test.json) e a [revisão focal](../reports/0.4.0-review.md) da 0.4.0 preservam revisões e escopos originais. Medições de similaridade e pipeline continuam como experimentos históricos, com hashes exatos dos fontes e ferramentas. Não substituem as verificações do release 0.4.1.
 
 ## Registro histórico da 0.3.0
 
@@ -37,7 +42,7 @@ Estes registros valem para a versão 0.3.0 e têm data de **2026-10-16 UTC**. A 
 - [Revisão focal dos fontes e empacotamento](../reports/0.3.0-review.md)
 - [Validação do site](../reports/0.3.0-website.json)
 
-O registro 0.3.0 relata 81 testes GNU/Linux e nove verificações portáteis. Os resultados valem para os fontes e o ambiente originais, não para os fontes alterados da 0.4.0.
+O registro 0.3.0 relata 81 testes GNU/Linux e nove verificações portáteis. Os resultados valem para os fontes e o ambiente originais, não para fontes de versões posteriores.
 
 ## Registro histórico da 0.2.0
 
