@@ -208,6 +208,102 @@ def run():
             )
 
         check("unmark", unmark_check)
+
+        from . import attestations, integrity, pq_signing
+
+        complete = base / "complete-project"
+        complete.mkdir()
+        (complete / "securityopsctl").write_bytes(b"#!/bin/sh\nexit 0\n")
+        (complete / "settings.json").write_bytes(b'{"fixture":true}\n')
+        (complete / "disk.iso").write_bytes(b"\0" * (2 * 1024 * 1024 + 1))
+
+        def whole_file_check():
+            inventory = integrity.snapshot(complete, apply=True)
+            _require(inventory["files"] == 3, "Inventário completo incorreto.")
+            _require(
+                integrity.verify_snapshot(complete)["ok"],
+                "Inventário completo não verificou.",
+            )
+            target = complete / "settings.json"
+            previous = target.read_bytes()
+            try:
+                target.write_bytes(b"{}")
+                _require(
+                    "settings.json" in integrity.verify_snapshot(complete)["changed"],
+                    "JSON adulterado não detectado.",
+                )
+            finally:
+                target.write_bytes(previous)
+
+        check("whole-file-integrity", whole_file_check)
+        backend = pq_signing.capabilities()
+        if backend["available"]:
+
+            def hybrid_check():
+                environment = {
+                    key: os.environ[key]
+                    for key in ("SystemRoot", "WINDIR", "PATH")
+                    if key in os.environ
+                }
+                environment.update(
+                    OPENSSL_CONF=os.devnull,
+                    OPENSSL_MODULES=str(base),
+                    OPENSSL_ENGINES=str(base),
+                )
+                keys = []
+                for algorithm in ("ML-DSA-87", "ED25519"):
+                    key = base / (algorithm + ".pem")
+                    generated = subprocess.run(
+                        [
+                            backend["executable"],
+                            "genpkey",
+                            "-algorithm",
+                            algorithm,
+                            "-provider",
+                            "default",
+                            "-out",
+                            str(key),
+                        ],
+                        stdin=subprocess.DEVNULL,
+                        capture_output=True,
+                        timeout=30,
+                        check=False,
+                        env=environment,
+                    )
+                    _require(
+                        generated.returncode == 0,
+                        "Chave temporária híbrida não criada.",
+                    )
+                    key.chmod(0o600)
+                    keys.append(key)
+                signed = attestations.sign_hybrid(complete, keys[0], keys[1])
+                pins = signed["fingerprints"]
+                verified = attestations.verify_hybrid(
+                    complete,
+                    pins["mldsa87"],
+                    pins["ed25519"],
+                    checkpoint=signed["checkpoint"],
+                )
+                _require(
+                    verified["ok"]
+                    and verified["authenticated"]
+                    and verified["rollback_protected"],
+                    "Autenticação híbrida não verificou.",
+                )
+                (complete / "settings.json").write_bytes(b"{}")
+                _require(
+                    not attestations.verify_hybrid(
+                        complete, pins["mldsa87"], pins["ed25519"]
+                    )["ok"],
+                    "Adulteração autenticada não detectada.",
+                )
+
+            check("hybrid-authentication", hybrid_check)
+        else:
+            skip(
+                "hybrid-authentication",
+                "OpenSSL 3.5+ com ML-DSA-87 e Ed25519 não disponível.",
+            )
     return {
         "action": "self-test",
         "version": __version__,

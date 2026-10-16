@@ -38,7 +38,7 @@ def launch():
         window = tk.Tk()
     except Exception as error:
         raise RuntimeError("Tkinter ou sessão gráfica indisponível") from error
-    window.title("SecOps CodeMark " + __version__)
+    window.title("SecOps Codemark " + __version__)
     window.geometry("940x740")
     window.minsize(760, 620)
     black, panel, cyan, white = "#080b0d", "#111a20", "#00d8ee", "#e9f2f5"
@@ -63,10 +63,10 @@ def launch():
             justify="left",
         )
 
-    label("CODEMARK", 26, cyan).pack(anchor="w", padx=24, pady=(20, 0))
-    label("Procedência para o seu código. Local, leve e reversível.", 12).pack(
-        anchor="w", padx=24, pady=(0, 18)
-    )
+    label("SecOps Codemark", 26, cyan).pack(anchor="w", padx=24, pady=(20, 0))
+    label(
+        "Marcas em fontes. Use snapshot e audit na CLI para a integridade completa.", 12
+    ).pack(anchor="w", padx=24, pady=(0, 18))
 
     def field(title, variable, directory=False):
         label(title, 10, cyan).pack(anchor="w", padx=24)

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0 — 2026-10-16
+
+- Rename the project to SecOps Codemark while retaining the `codemark` CLI.
+- Inventory every regular file with streamed SHA-256 and SHA-512, explicit
+  metadata exclusions and change, size, mode and traversal checks.
+- Authenticate full snapshots with both ML-DSA-87 and Ed25519 signatures,
+  independently pinned keys, linked records and external rollback checkpoints.
+- Export private trees with pinned native Zupt hybrid recipient encryption,
+  exclusive output publication and verified source stability.
+- Cover metadata FIFO swaps, Windows reparse points, concurrent history changes
+  and report permissions with regression tests.
+- Add reproducible similarity evaluation and measured release pipeline examples.
+- Expand English and Brazilian Portuguese guides and refresh the responsive
+  website with accessible color accents and CSS animation.
+
 ## 0.3.1 — 2026-10-15
 
 - Compare canonical project and signing-key paths, including Windows short-name

@@ -1,0 +1,27 @@
+# Copy into a trusted repository and configure the paths and public trust values.
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Verify release integrity
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Verify the prepared release
+        env:
+          CODEMARK_PYZ: ${{ vars.CODEMARK_PYZ }}
+          RELEASE_DIR: ${{ vars.RELEASE_DIR }}
+          PQ_FINGERPRINT: ${{ vars.CODEMARK_PQ_FINGERPRINT }}
+          CLASSICAL_FINGERPRINT: ${{ vars.CODEMARK_CLASSICAL_FINGERPRINT }}
+          CHECKPOINT: ${{ vars.CODEMARK_CHECKPOINT }}
+          AUDIT_REPORT: ${{ runner.temp }}/release-audit.json
+        run: sh examples/pipeline/verify-release.sh

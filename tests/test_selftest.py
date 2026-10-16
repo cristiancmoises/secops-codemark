@@ -23,12 +23,24 @@ class SelfTestTests(unittest.TestCase):
             check["name"] for check in report["checks"] if check["status"] == "pass"
         }
         self.assertTrue(
-            {"mark", "verify", "tamper", "compare", "unmark", "python-runtime"}
+            {
+                "mark",
+                "verify",
+                "tamper",
+                "compare",
+                "unmark",
+                "python-runtime",
+                "whole-file-integrity",
+            }
             <= passed,
             report,
         )
         if shutil.which("ssh-keygen"):
             self.assertIn("openssh-signature", passed)
+        from codemark.pq_signing import capabilities
+
+        if capabilities()["available"]:
+            self.assertIn("hybrid-authentication", passed)
         self.assertNotIn("production_ready", report)
 
     def test_optional_tool_absence_is_explicit_without_hiding_core_results(self):
@@ -39,7 +51,13 @@ class SelfTestTests(unittest.TestCase):
             check["name"] for check in report["checks"] if check["status"] == "skip"
         }
         self.assertTrue(
-            {"openssh-signature", "javascript-runtime", "guile-runtime"} <= skipped,
+            {
+                "openssh-signature",
+                "javascript-runtime",
+                "guile-runtime",
+                "hybrid-authentication",
+            }
+            <= skipped,
             report,
         )
 

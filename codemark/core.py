@@ -99,15 +99,26 @@ def safe_relative(name):
     )
 
 
+def _unsafe_link(path):
+    try:
+        info = path.lstat()
+    except (FileNotFoundError, NotADirectoryError):
+        return False
+    return stat.S_ISLNK(info.st_mode) or bool(
+        getattr(info, "st_file_attributes", 0)
+        & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    )
+
+
 def checked_root(root):
     path = Path(os.path.abspath(os.fspath(root)))
     for item in (path, *path.parents):
-        if item.is_symlink():
+        if _unsafe_link(item):
             raise CodeMarkError("Links simbólicos na raiz/caminho não são aceitos.")
     if not path.is_dir():
         raise CodeMarkError("A raiz precisa ser um diretório existente.")
     metadata = path / ".codemark"
-    if metadata.is_symlink() or (metadata.exists() and not metadata.is_dir()):
+    if _unsafe_link(metadata) or (metadata.exists() and not metadata.is_dir()):
         raise CodeMarkError(".codemark precisa ser um diretório local, sem link.")
     if metadata.exists():
         for name in (
@@ -115,10 +126,12 @@ def checked_root(root):
             "manifest.json",
             "manifest.json.asc",
             "manifest.json.sshsig",
+            "integrity.json",
+            "attestations.json",
             "lock",
         ):
             item = metadata / name
-            if item.is_symlink() or (item.exists() and not item.is_file()):
+            if _unsafe_link(item) or (item.exists() and not item.is_file()):
                 raise CodeMarkError("Metadado inválido ou link em .codemark: " + name)
     return path
 
@@ -130,7 +143,9 @@ def read_regular(path, limit):
             raise CodeMarkError("Arquivo especial ou link não aceito: " + path.name)
         if before.st_size > limit:
             raise CodeMarkError("Arquivo excede o limite de tamanho: " + path.name)
-        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        flags = (
+            os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+        )
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, "rb") as handle:
             opened = os.fstat(handle.fileno())
@@ -585,6 +600,8 @@ def _mark(root, owner, project, apply, before_commit):
         "skipped": skipped,
         "paths": list(sources),
         "authenticated": False,
+        "coverage_mode": "source-comments-only",
+        "note": "Marcas cobrem somente fontes suportados. Use snapshot para a integridade de todos os arquivos regulares.",
     }
     if apply:
         # File contents, output sizes and metadata are validated before writing.
@@ -661,7 +678,8 @@ def verify(root):
         "skipped": skipped,
         "manifest_sha256": digest(raw_manifest),
         "authenticated": False,
-        "note": "Manifesto local; autenticação exige assinatura e chave fixada.",
+        "coverage_mode": "source-comments-only",
+        "note": "Manifesto local de fontes; use snapshot para todos os arquivos e assinaturas híbridas para autenticação.",
     }
 
 

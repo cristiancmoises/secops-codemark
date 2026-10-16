@@ -15,7 +15,7 @@ from . import __version__, core
 
 def format_report(report):
     action = report.get("action")
-    lines = [f"SecOps CodeMark {__version__} | {action}"]
+    lines = [f"SecOps Codemark {__version__} | {action}"]
     if action in ("mark", "unmark"):
         lines.append(
             ("Aplicado" if report["applied"] else "Prévia, sem alterações")
@@ -26,7 +26,7 @@ def format_report(report):
                 f"Titular informado: {report['owner']} | Projeto: {report['project']}"
             )
         lines.extend(report.get("paths", [])[:30])
-    elif action == "verify":
+    elif action in ("verify", "audit"):
         lines.append("Integridade: " + ("OK" if report["ok"] else "DIVERGÊNCIAS"))
         lines.append(
             "Referência: "
@@ -42,7 +42,24 @@ def format_report(report):
             ("untracked", "Novo/não registrado"),
             ("invalid_marks", "Marca ausente/inválida"),
         ):
-            lines.extend(f"{label}: {path}" for path in report[field])
+            lines.extend(f"{label}: {path}" for path in report.get(field, []))
+        lines.extend(
+            f"Permissões alteradas: {path}" for path in report.get("mode_changed", [])
+        )
+    elif action == "snapshot":
+        lines.append(
+            ("Aplicado" if report["applied"] else "Prévia, sem alterações")
+            + f": {report['files']} arquivo(s), {report['total_bytes']} bytes."
+        )
+        lines.append("SHA-256: " + report["manifest_sha256"])
+        lines.append("SHA-512: " + report["manifest_sha512"])
+    elif action == "bundle":
+        lines.append(
+            ("Criado" if report["applied"] else "Prévia, sem alterações")
+            + ": "
+            + str(report.get("archive", ""))
+        )
+        lines.append("Destinatário: " + report["recipient_fingerprint"])
     elif action == "compare":
         lines.append(
             f"{len(report['matches'])} candidato(s); similaridade não é prova de plágio."
@@ -54,9 +71,13 @@ def format_report(report):
         if len(report["matches"]) > 100:
             lines.append("Lista abreviada; use --json para o relatório completo.")
     elif action == "sign":
-        lines.extend(
-            [f"Assinatura: {report['signature']}", f"Chave: {report['fingerprint']}"]
-        )
+        lines.append(f"Assinatura: {report['signature']}")
+        if "fingerprints" in report:
+            lines.extend(
+                f"{key}: {value}" for key, value in report["fingerprints"].items()
+            )
+        else:
+            lines.append(f"Chave: {report['fingerprint']}")
     elif action == "doctor":
         lines.extend(
             f"{key}: {value}" for key, value in report.items() if key != "action"
@@ -75,9 +96,16 @@ def format_report(report):
         )
     if report.get("note"):
         lines.append(report["note"])
-    lines.append(
-        "Marcas são removíveis. Código público continua sujeito a estudo e cópia."
-    )
+    if "coverage_mode" in report:
+        lines.append(
+            f"Cobertura: {report['coverage_mode']} | {report.get('files', 0)} arquivo(s)."
+        )
+    if "checkpoint" in report:
+        lines.append("Checkpoint SHA-512: " + report["checkpoint"])
+    if action in ("mark", "unmark", "compare"):
+        lines.append(
+            "Marcas são removíveis. Código público continua sujeito a estudo e cópia."
+        )
     return "\n".join(lines)
 
 
@@ -100,7 +128,8 @@ def report_file(destination, roots=()):
             "Caminho do relatório inválido; confira diretórios e links."
         ) from error
     try:
-        handle = path.open("x", encoding="utf-8", newline="\n")
+        descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        handle = os.fdopen(descriptor, "w", encoding="utf-8", newline="\n")
     except OSError as error:
         raise core.CodeMarkError(
             "Não foi possível criar o relatório; o destino deve ser novo e gravável."
@@ -147,17 +176,28 @@ def save_report(destination, content, roots=()):
 def parser():
     cli = argparse.ArgumentParser(
         prog="codemark",
-        description="Marca de procedência reversível e comparação de fontes, offline.",
+        description="Integridade de arquivos, assinaturas híbridas, pacotes privados e marcas de procedência, offline.",
     )
     cli.add_argument(
-        "--version", action="version", version="SecOps CodeMark " + __version__
+        "--version", action="version", version="SecOps Codemark " + __version__
     )
     commands = cli.add_subparsers(dest="command")
-    for name in ("mark", "unmark", "verify", "compare", "sign", "doctor", "self-test"):
+    for name in (
+        "mark",
+        "unmark",
+        "snapshot",
+        "verify",
+        "audit",
+        "bundle",
+        "compare",
+        "sign",
+        "doctor",
+        "self-test",
+    ):
         command = commands.add_parser(name)
         if name not in ("doctor", "self-test"):
             command.add_argument("root", type=Path)
-        if name in ("mark", "unmark"):
+        if name in ("mark", "unmark", "snapshot", "bundle"):
             command.add_argument(
                 "--apply",
                 action="store_true",
@@ -183,6 +223,40 @@ def parser():
                 type=Path,
                 help="chave privada Ed25519 existente, fora do projeto, com .pub adjacente",
             )
+            backend.add_argument(
+                "--pq-key", type=Path, help="chave privada ML-DSA-87, fora do projeto"
+            )
+            command.add_argument(
+                "--classical-key",
+                type=Path,
+                help="chave privada Ed25519 para assinatura híbrida",
+            )
+            command.add_argument(
+                "--passphrase-file",
+                type=Path,
+                help="arquivo privado externo para desbloquear ambas as chaves",
+            )
+        if name in ("verify", "audit"):
+            command.add_argument(
+                "--pq-fingerprint",
+                help="fingerprint SHA256 da chave pública ML-DSA-87 em DER SPKI",
+            )
+            command.add_argument(
+                "--classical-fingerprint",
+                help="fingerprint SHA256 da chave pública Ed25519 em DER SPKI",
+            )
+            command.add_argument(
+                "--checkpoint", help="SHA512 externo do registro mais recente"
+            )
+        if name == "bundle":
+            command.add_argument("--recipient-key", type=Path, required=True)
+            command.add_argument("--recipient-fingerprint", required=True)
+            command.add_argument(
+                "--archive",
+                type=Path,
+                required=True,
+                help="novo pacote .zupt fora do projeto",
+            )
         if name == "verify":
             command.add_argument("--require-signature", action="store_true")
             command.add_argument("--keyring", type=Path)
@@ -206,7 +280,50 @@ def perform(args, before_commit=None):
         )
     if args.command == "unmark":
         return core.unmark(args.root, args.apply, before_commit=before_commit)
-    if args.command == "verify":
+    if args.command == "snapshot":
+        from .integrity import snapshot
+
+        return snapshot(args.root, apply=args.apply, before_commit=before_commit)
+    if args.command == "bundle":
+        from .privacy import bundle
+
+        return bundle(
+            args.root,
+            args.archive,
+            args.recipient_key,
+            args.recipient_fingerprint,
+            apply=args.apply,
+            before_commit=before_commit,
+        )
+    if args.command in ("verify", "audit"):
+        pins = (bool(args.pq_fingerprint), bool(args.classical_fingerprint))
+        if any(pins) or args.checkpoint or args.command == "audit":
+            if not all(pins):
+                raise core.CodeMarkError(
+                    "Use --pq-fingerprint e --classical-fingerprint juntos, com chaves confiáveis independentes."
+                )
+            if args.command == "verify" and any(
+                (
+                    args.require_signature,
+                    args.keyring,
+                    args.fingerprint,
+                    args.ssh_public_key,
+                    args.ssh_fingerprint,
+                )
+            ):
+                raise core.CodeMarkError(
+                    "Escolha a assinatura híbrida ou a verificação legada de fontes."
+                )
+            from .attestations import verify_hybrid
+
+            report = verify_hybrid(
+                args.root,
+                args.pq_fingerprint,
+                args.classical_fingerprint,
+                checkpoint=args.checkpoint,
+            )
+            report["action"] = args.command
+            return report
         signature_options = (
             args.require_signature,
             bool(args.keyring),
@@ -221,7 +338,16 @@ def perform(args, before_commit=None):
             )
         if any(ssh_options) and not all(ssh_options):
             raise core.CodeMarkError("Use --ssh-public-key e --ssh-fingerprint juntos.")
-        report = core.verify(args.root)
+        root = core.checked_root(args.root)
+        if (root / ".codemark/integrity.json").exists():
+            if any(signature_options) or any(ssh_options):
+                raise core.CodeMarkError(
+                    "O snapshot completo exige as duas chaves híbridas; assinaturas GPG/SSH legadas cobrem somente fontes marcados."
+                )
+            from .integrity import verify_snapshot
+
+            return verify_snapshot(root)
+        report = core.verify(root)
         authenticated = None
         if args.require_signature:
             from .signing import verify_signature
@@ -244,6 +370,22 @@ def perform(args, before_commit=None):
     if args.command == "compare":
         return core.compare(args.root, args.suspect, args.threshold)
     if args.command == "sign":
+        if args.pq_key:
+            if not args.classical_key:
+                raise core.CodeMarkError("Use --pq-key e --classical-key juntos.")
+            from .attestations import sign_hybrid
+
+            return sign_hybrid(
+                args.root,
+                args.pq_key,
+                args.classical_key,
+                passphrase_file=args.passphrase_file,
+                before_commit=before_commit,
+            )
+        if args.classical_key or args.passphrase_file:
+            raise core.CodeMarkError(
+                "--classical-key e --passphrase-file exigem --pq-key."
+            )
         if args.ssh_key:
             from .ssh_signing import sign_ssh
 
@@ -255,6 +397,8 @@ def perform(args, before_commit=None):
         from .selftest import run
 
         return run()
+    from .pq_signing import capabilities
+
     return {
         "action": "doctor",
         "version": __version__,
@@ -268,6 +412,8 @@ def perform(args, before_commit=None):
         "gpg": bool(shutil.which("gpg")),
         "gpgv": bool(shutil.which("gpgv")),
         "ssh_keygen": bool(shutil.which("ssh-keygen")),
+        "hybrid_signing": capabilities(),
+        "zupt": bool(shutil.which("zupt")),
         "network_required": False,
     }
 
@@ -314,7 +460,7 @@ def main(argv=None):
             if destination and not destination.closed:
                 write_report(report)
         print(content)
-        if args.command == "verify" and not report["ok"]:
+        if args.command in ("verify", "audit") and not report["ok"]:
             return 1
         if args.command == "compare" and report["matches"]:
             return 1
