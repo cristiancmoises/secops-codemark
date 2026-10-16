@@ -353,6 +353,67 @@ class IntegrityTests(unittest.TestCase):
                 self.assertEqual(report["files"], 2)
                 self.assertTrue(integrity.verify_snapshot(self.root)["ok"])
 
+    class CtimeStat:
+        def __init__(self, original, ctime):
+            self.original = original
+            self.st_ctime_ns = ctime
+
+        def __getattr__(self, name):
+            return getattr(self.original, name)
+
+    def test_split_path_and_descriptor_ctime_preserves_stable_inventory(self):
+        self.put("nested/settings.json", b"{}")
+        original_fstat = os.fstat
+
+        def descriptor_stat(descriptor):
+            value = original_fstat(descriptor)
+            return self.CtimeStat(value, value.st_ctime_ns + 1)
+
+        for directory_fds in {False, integrity.DIRECTORY_FDS}:
+            with (
+                self.subTest(directory_fds=directory_fds),
+                patch.object(integrity, "DIRECTORY_FDS", directory_fds),
+                patch("os.fstat", side_effect=descriptor_stat),
+            ):
+                self.assertEqual(integrity.snapshot(self.root, apply=True)["files"], 1)
+                self.assertTrue(integrity.verify_snapshot(self.root)["ok"])
+
+    def test_descriptor_ctime_change_still_rejects_same_size_and_mtime(self):
+        path = self.put("settings.json", b"{}")
+        original_fstat = os.fstat
+        calls = 0
+
+        def descriptor_stat(descriptor):
+            nonlocal calls
+            calls += 1
+            value = original_fstat(descriptor)
+            return self.CtimeStat(value, value.st_ctime_ns + calls)
+
+        with (
+            patch("os.fstat", side_effect=descriptor_stat),
+            self.assertRaises(core.CodeMarkError),
+        ):
+            integrity._hash_file(path, path.lstat(), None, path.name)
+
+    def test_path_ctime_change_still_rejects_same_size_and_mtime(self):
+        path = self.put("settings.json", b"{}")
+        before = path.lstat()
+        original_lstat = Path.lstat
+
+        def path_stat(current):
+            value = original_lstat(current)
+            return (
+                self.CtimeStat(value, value.st_ctime_ns + 1)
+                if current == path
+                else value
+            )
+
+        with (
+            patch.object(Path, "lstat", path_stat),
+            self.assertRaises(core.CodeMarkError),
+        ):
+            integrity._hash_file(path, before, None, path.name)
+
     def test_read_only_mode_change_is_detected_on_all_platforms(self):
         path = self.put("settings.json", b"{}")
         path.chmod(0o666)

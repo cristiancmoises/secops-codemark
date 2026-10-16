@@ -90,7 +90,9 @@ def _read_regular(path, *, maximum=None, public=False):
     parts = []
     total = 0
     with os.fdopen(descriptor, "rb") as stream:
-        if _identity(os.fstat(stream.fileno())) != _identity(before):
+        opened = os.fstat(stream.fileno())
+        # Compare ctime only within one API: Windows path/fd semantics can differ.
+        if _identity(opened)[:-1] != _identity(before)[:-1]:
             raise CodeMarkError("A file changed while its inventory was being read.")
         while chunk := stream.read(min(1024 * 1024, before.st_size - total + 1)):
             total += len(chunk)
@@ -100,7 +102,7 @@ def _read_regular(path, *, maximum=None, public=False):
             sha512.update(chunk)
             if public:
                 parts.append(chunk)
-        if _identity(os.fstat(stream.fileno())) != _identity(before):
+        if _identity(os.fstat(stream.fileno())) != _identity(opened):
             raise CodeMarkError("A file changed while its inventory was being read.")
     if total != before.st_size or _identity(path.lstat()) != _identity(before):
         raise CodeMarkError("A file changed while its inventory was being read.")
@@ -241,6 +243,7 @@ def _varint(stream):
 
 def _inspect_archive(path):
     """Read the binary encryption header, never infer mode from CLI wording."""
+    before = path.lstat()
     descriptor = os.open(
         path,
         os.O_RDONLY
@@ -250,8 +253,13 @@ def _inspect_archive(path):
     )
     with os.fdopen(descriptor, "rb") as stream:
         info = os.fstat(stream.fileno())
-        if not stat.S_ISREG(info.st_mode):
-            raise CodeMarkError("The native encrypted archive is not a regular file.")
+        if (
+            not stat.S_ISREG(info.st_mode)
+            or _identity(info)[:-1] != _identity(before)[:-1]
+        ):
+            raise CodeMarkError(
+                "The native encrypted archive is not a stable regular file."
+            )
         header = stream.read(64)
         if len(header) != 64 or header[:6] != b"ZUPT\x1a\x00":
             raise CodeMarkError("The native encrypted archive header is invalid.")
@@ -276,7 +284,9 @@ def _inspect_archive(path):
             )
         if _identity(os.fstat(stream.fileno())) != _identity(info):
             raise CodeMarkError("The encrypted archive changed during validation.")
-    return _identity(info)
+    if _identity(path.lstat()) != _identity(before):
+        raise CodeMarkError("The encrypted archive changed during validation.")
+    return _identity(before)
 
 
 def _same_directory(path, identity):

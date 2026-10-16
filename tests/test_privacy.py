@@ -579,6 +579,61 @@ class BundleTests(unittest.TestCase):
             signal.setitimer(signal.ITIMER_REAL, 0)
             signal.signal(signal.SIGALRM, old)
 
+    class CtimeStat:
+        def __init__(self, original, ctime):
+            self.original = original
+            self.st_ctime_ns = ctime
+
+        def __getattr__(self, name):
+            return getattr(self.original, name)
+
+    def test_split_path_and_descriptor_ctime_preserves_native_bundle(self):
+        original_fstat = os.fstat
+
+        def descriptor_stat(descriptor):
+            value = original_fstat(descriptor)
+            return self.CtimeStat(value, value.st_ctime_ns + 1)
+
+        with patch("os.fstat", side_effect=descriptor_stat):
+            report = self.bundle(apply=True)
+        self.assertTrue(report["applied"])
+        self.native(
+            "test", "--pq", str(self.keydir / "recipient.key"), str(self.output)
+        )
+
+    def test_descriptor_ctime_change_still_rejects_same_size_and_mtime(self):
+        path = self.root / "settings.json"
+        original_fstat = os.fstat
+        calls = 0
+
+        def descriptor_stat(descriptor):
+            nonlocal calls
+            calls += 1
+            value = original_fstat(descriptor)
+            return self.CtimeStat(value, value.st_ctime_ns + calls)
+
+        with (
+            patch("os.fstat", side_effect=descriptor_stat),
+            self.assertRaises(CodeMarkError),
+        ):
+            privacy._read_regular(path)
+
+    def test_path_ctime_change_still_rejects_same_size_and_mtime(self):
+        path = self.root / "settings.json"
+        original_lstat = Path.lstat
+        calls = 0
+
+        def path_stat(current):
+            nonlocal calls
+            value = original_lstat(current)
+            if current != path:
+                return value
+            calls += 1
+            return self.CtimeStat(value, value.st_ctime_ns + calls)
+
+        with patch.object(Path, "lstat", path_stat), self.assertRaises(CodeMarkError):
+            privacy._read_regular(path)
+
     def test_changed_public_key_after_compression_is_rejected(self):
         key = self.home / "recipient.pub"
         key.write_bytes(self.public.read_bytes())

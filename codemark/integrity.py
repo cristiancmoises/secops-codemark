@@ -188,15 +188,18 @@ def read_snapshot(root, raw=None):
     return _validate(manifest)
 
 
-def _stamp(info):
+def _entry_stamp(info):
     return (
         info.st_dev,
         info.st_ino,
         info.st_size,
         info.st_mtime_ns,
-        info.st_ctime_ns,
         stat.S_IMODE(info.st_mode),
     )
+
+
+def _stamp(info):
+    return (*_entry_stamp(info), info.st_ctime_ns)
 
 
 def _hash_file(path, before, directory_fd, name):
@@ -214,7 +217,8 @@ def _hash_file(path, before, directory_fd, name):
             not stat.S_ISREG(opened.st_mode)
             or getattr(opened, "st_file_attributes", 0)
             & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
-            or _stamp(opened) != _stamp(before)
+            # Windows path ctime can mean birth time while fstat means change time.
+            or _entry_stamp(opened) != _entry_stamp(before)
         ):
             _invalid("Arquivo alterado durante a abertura do inventário.")
         first, second = hashlib.sha256(), hashlib.sha512()
@@ -236,7 +240,7 @@ def _hash_file(path, before, directory_fd, name):
             or getattr(current, "st_file_attributes", 0)
             & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
             or _stamp(after) != _stamp(opened)
-            or _stamp(current) != _stamp(opened)
+            or _stamp(current) != _stamp(before)
         ):
             _invalid("Arquivo alterado durante o cálculo de integridade.")
         return {
@@ -305,7 +309,9 @@ def _inventory(root):
                     else None
                 )
                 try:
-                    if child is not None and _stamp(os.fstat(child)) != _stamp(info):
+                    if child is not None and _entry_stamp(
+                        os.fstat(child)
+                    ) != _entry_stamp(info):
                         _invalid("Diretório alterado durante a abertura do inventário.")
                     walk(path, child)
                 finally:
