@@ -138,7 +138,7 @@ def sign_ssh(root, key_file, *, before_commit=None):
         raise core.CodeMarkError(
             "A chave privada deve ser um arquivo regular local de até 1 MiB."
         )
-    if key.resolve().is_relative_to(root):
+    if key.resolve().is_relative_to(root.resolve()):
         raise core.CodeMarkError("Mantenha a chave privada fora da árvore do projeto.")
     # Only the explicit public file is read by Python. The native tool reads the private key.
     public = _public_key(core.read_regular(Path(str(key) + ".pub"), 16 * 1024))

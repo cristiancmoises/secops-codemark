@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 — 2026-10-15
+
+- Compare canonical project and signing-key paths, including Windows short-name
+  aliases, before accepting a private key outside the source tree.
+- Preserve byte-identical comparison fixtures and verify runtime output against
+  the original program across native line-ending conventions.
+
 ## 0.3.0 — 2026-10-15
 
 - Add English and Brazilian Portuguese documentation and a static documentation,

@@ -61,6 +61,13 @@ class ReviewRegressions(unittest.TestCase):
     def test_encoding_lookalike_inside_docstring_keeps_runtime_value(self):
         original = b'"""\n# coding: utf-8\n"""\nprint(__doc__, end="")\n'
         path = self.put("docstring.py", original)
+        baseline = subprocess.run(
+            [sys.executable, "-I", str(path)],
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+        self.assertEqual(baseline.returncode, 0, baseline.stderr)
         core.mark(self.root, owner="Test", apply=True)
         result = subprocess.run(
             [sys.executable, "-I", str(path)],
@@ -69,7 +76,7 @@ class ReviewRegressions(unittest.TestCase):
             check=False,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, b"\n# coding: utf-8\n")
+        self.assertEqual(result.stdout, baseline.stdout)
         self.assertTrue(core.verify(self.root)["ok"])
         core.unmark(self.root, apply=True)
         self.assertEqual(path.read_bytes(), original)

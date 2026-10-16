@@ -284,7 +284,7 @@ class CoreTests(unittest.TestCase):
         suspect = Path(self.temp.name) / "suspect"
         suspect.mkdir()
         (suspect / "copy.scm").write_bytes((self.root / "tiny.scm").read_bytes())
-        (suspect / "without.scm").write_text('(display "hello")\n')
+        (suspect / "without.scm").write_bytes(b'(display "hello")\n')
         reasons = {m["method"] for m in core.compare(self.root, suspect)["matches"]}
         self.assertIn("watermark", reasons)
         self.assertIn("exact-content", reasons)

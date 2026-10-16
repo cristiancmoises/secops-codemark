@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from codemark import core, ssh_signing
 
@@ -133,6 +134,20 @@ class SSHSigningTests(unittest.TestCase):
         Path(str(key) + ".pub").write_bytes(self.public.read_bytes())
         with self.assertRaises(core.CodeMarkError):
             ssh_signing.sign_ssh(self.root, key)
+
+    def test_private_key_inside_a_canonical_root_alias_is_rejected(self):
+        key = self.root / "sign-key"
+        key.write_bytes(self.key.read_bytes())
+        key.chmod(0o600)
+        Path(str(key) + ".pub").write_bytes(self.public.read_bytes())
+        # Windows temporary roots can use a short-name alias that resolve expands.
+        alias = self.root / ".." / self.root.name
+        with (
+            patch.object(core, "checked_root", return_value=alias),
+            self.assertRaises(core.CodeMarkError),
+        ):
+            ssh_signing.sign_ssh(alias, key)
+        self.assertFalse((self.root / ".codemark/manifest.json.sshsig").exists())
 
     def test_multiple_public_keys_are_rejected(self):
         ssh_signing.sign_ssh(self.root, self.key)
