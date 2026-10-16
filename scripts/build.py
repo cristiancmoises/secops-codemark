@@ -118,7 +118,13 @@ def build(output, *, archive=False):
             target = stage / filename
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
-            target.chmod(0o755 if target.suffix in (".sh", ".pyz") else 0o644)
+            if filename == "codemark.pyz":
+                mode = 0o755
+            elif filename == "SHA256SUMS":
+                mode = 0o644
+            else:
+                mode = 0o755 if (ROOT / filename).stat().st_mode & 0o111 else 0o644
+            target.chmod(mode)
         stage.rename(destination)
     release_files = {"codemark.pyz": portable}
     result = destination
@@ -137,7 +143,9 @@ def build(output, *, archive=False):
         )
         subprocess.run([zupt, "test", str(result)], check=True, timeout=120)
         release_files[result.name] = result.read_bytes()
-    (output / "SHA256SUMS").write_bytes(checksum_entries(release_files))
+    checksums = output / "SHA256SUMS"
+    checksums.write_bytes(checksum_entries(release_files))
+    checksums.chmod(0o644)
     return result
 
 

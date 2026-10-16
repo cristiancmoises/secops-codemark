@@ -1,6 +1,8 @@
 import hashlib
 import importlib.util
 import json
+import os
+import stat
 import subprocess
 import sys
 import tempfile
@@ -76,6 +78,41 @@ class PortablePackageTests(unittest.TestCase):
                     for name in names
                 )
             )
+
+    @unittest.skipUnless(os.name == "posix", "requires POSIX executable mode bits")
+    def test_source_staging_preserves_executable_intent_without_suffix_guesses(self):
+        builder = self.builder()
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "source"
+            (root / "codemark").mkdir(parents=True)
+            (root / "docs").mkdir()
+            (root / "COPYING").write_text("test license")
+            executable = root / "codemark" / "cli.py"
+            executable.write_bytes(b"print('executable source')\n")
+            executable.chmod(0o741)
+            plain = root / "docs" / "plain.sh"
+            plain.write_bytes(b"plain non-executable source\n")
+            plain.chmod(0o640)
+            output = base / "output"
+            with patch.object(builder, "ROOT", root):
+                staged = builder.build(output)
+            self.assertEqual(
+                (staged / "codemark/cli.py").read_bytes(), executable.read_bytes()
+            )
+            self.assertEqual(
+                (staged / "docs/plain.sh").read_bytes(), plain.read_bytes()
+            )
+            for path, expected in (
+                (staged / "codemark/cli.py", 0o755),
+                (staged / "docs/plain.sh", 0o644),
+                (staged / "codemark.pyz", 0o755),
+                (staged / "SHA256SUMS", 0o644),
+                (output / "codemark.pyz", 0o755),
+                (output / "SHA256SUMS", 0o644),
+            ):
+                with self.subTest(path=path):
+                    self.assertEqual(stat.S_IMODE(path.stat().st_mode), expected)
 
     def test_reproducible_portable_package_runs_outside_repository(self):
         builder = REPO / "scripts/build.py"
