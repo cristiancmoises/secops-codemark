@@ -280,7 +280,12 @@ def _inventory(root):
         for entry in sorted(entries, key=lambda item: item.name):
             path = directory / entry.name
             relative = _path(path.relative_to(root).as_posix())
-            info = entry.stat(follow_symlinks=False)
+            # Cached DirEntry metadata omits file identity on Windows.
+            info = (
+                os.stat(entry.name, dir_fd=descriptor, follow_symlinks=False)
+                if descriptor is not None
+                else path.lstat()
+            )
             if stat.S_ISLNK(info.st_mode) or getattr(
                 info, "st_file_attributes", 0
             ) & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400):

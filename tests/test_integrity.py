@@ -309,28 +309,29 @@ class IntegrityTests(unittest.TestCase):
             with self.assertRaises(core.CodeMarkError):
                 integrity.verify_snapshot(self.root)
 
-    class ReparseStat:
-        st_file_attributes = 0x400
-
-        def __init__(self, original):
-            self.original = original
-
-        def __getattr__(self, name):
-            return getattr(self.original, name)
-
-    def test_inventory_rejects_reparse_attributes_on_files_and_directories(self):
+    def test_windows_cached_directory_metadata_does_not_replace_file_identity(self):
+        self.put("nested/settings.json", b"{}")
+        self.put("securityopsctl", b"command")
         original_scandir = os.scandir
-        reparse_stat = self.ReparseStat
+
+        class CachedStat:
+            st_ino = 0
+            st_dev = 0
+            st_nlink = 0
+
+            def __init__(self, original):
+                self.original = original
+
+            def __getattr__(self, name):
+                return getattr(self.original, name)
 
         class Entry:
             def __init__(self, original):
                 self.original = original
                 self.name = original.name
-                self.path = original.path
 
             def stat(self, **kwargs):
-                value = self.original.stat(**kwargs)
-                return reparse_stat(value) if self.name == "reparse" else value
+                return CachedStat(self.original.stat(**kwargs))
 
         class Iterator:
             def __init__(self, path):
@@ -342,6 +343,52 @@ class IntegrityTests(unittest.TestCase):
             def __exit__(self, *args):
                 self.original.close()
 
+        for directory_fds in {False, integrity.DIRECTORY_FDS}:
+            with (
+                self.subTest(directory_fds=directory_fds),
+                patch.object(integrity, "DIRECTORY_FDS", directory_fds),
+                patch("os.scandir", side_effect=Iterator),
+            ):
+                report = integrity.snapshot(self.root, apply=True)
+                self.assertEqual(report["files"], 2)
+                self.assertTrue(integrity.verify_snapshot(self.root)["ok"])
+
+    def test_read_only_mode_change_is_detected_on_all_platforms(self):
+        path = self.put("settings.json", b"{}")
+        path.chmod(0o666)
+        self.addCleanup(path.chmod, 0o666)
+        self.snapshot()
+        path.chmod(0o444)
+        report = integrity.verify_snapshot(self.root)
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["mode_changed"], ["settings.json"])
+        self.assertEqual(report["changed"], [])
+
+    class ReparseStat:
+        st_file_attributes = 0x400
+
+        def __init__(self, original):
+            self.original = original
+
+        def __getattr__(self, name):
+            return getattr(self.original, name)
+
+    def test_inventory_rejects_reparse_attributes_on_files_and_directories(self):
+        original_stat = os.stat
+        original_lstat = Path.lstat
+
+        def marked_stat(path, *args, **kwargs):
+            value = original_stat(path, *args, **kwargs)
+            return (
+                self.ReparseStat(value)
+                if not isinstance(path, int) and Path(path).name == "reparse"
+                else value
+            )
+
+        def marked_lstat(path):
+            value = original_lstat(path)
+            return self.ReparseStat(value) if path.name == "reparse" else value
+
         for directory in (False, True):
             path = self.root / "reparse"
             if directory:
@@ -351,7 +398,8 @@ class IntegrityTests(unittest.TestCase):
                 path.write_bytes(b"must not be followed")
             with (
                 self.subTest(directory=directory),
-                patch("os.scandir", side_effect=Iterator),
+                patch("os.stat", side_effect=marked_stat),
+                patch.object(Path, "lstat", marked_lstat),
                 self.assertRaises(core.CodeMarkError),
             ):
                 integrity.snapshot(self.root)
