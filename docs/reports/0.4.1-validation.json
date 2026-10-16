@@ -1,9 +1,9 @@
 {
   "version": "0.4.1",
-  "date_utc": "2026-10-16T10:24:03.009759+00:00",
+  "date_utc": "2026-10-16T10:39:17.539156+00:00",
   "status": "candidate-runtime-and-release-tooling-qualified",
-  "qualification_commit": "f72371ae987ad2299778d0f8a637bda85740c38f",
-  "unit_test_code_commit": "03d0bea75e36e11cc36bba06d06ca28471c4a4d3",
+  "qualification_commit": "239cc2ecc0e3c114769978a87bd70730e3cb383d",
+  "unit_test_code_commit": "239cc2ecc0e3c114769978a87bd70730e3cb383d",
   "environment": {
     "python": "3.12.12",
     "platform": "Linux-7.2.9-x86_64-with-glibc2.41",
@@ -31,9 +31,9 @@
     "passed": 183,
     "failed": 0,
     "skipped": 0,
-    "seconds": 9.176,
+    "seconds": 7.276,
     "exit": 0,
-    "log_sha256": "fb63cd6f96e54b32b14b97c6c6bf0723733c0c21b7e2164646194ba77d5a42d0"
+    "log_sha256": "18af444ca1a24e768264ee1847b41a40ea566ff9581ae6f056c00856566f6303"
   },
   "portable": {
     "sha256": "a4b4e76dcda43a4631a16283afe26ca5814cd8c2246ca1172ca6a16afeafafc7",
@@ -53,14 +53,15 @@
     "command_scope": "Genuine unencrypted native archive build and test, isolated portable, two asset checksum checks, three-file download staging and strict 81-page site link check",
     "documentation_fix": "The first trial rejected an unmapped repository-source link; the documented source URL was corrected and the complete recipe passed on a fresh second output",
     "native_archive_version": "5.2.10",
-    "scope": "Candidate archive, not the final tagged publication artifact"
+    "scope": "Candidate archive, not the final tagged publication artifact",
+    "qualification_commit": "f72371ae987ad2299778d0f8a637bda85740c38f"
   },
   "changed_source_sha256": {
     "codemark/__init__.py": "466f9843aadd470be1ceea4d7e453e653e1878759b15d94002cab3d395cc1790",
     "scripts/build.py": "f280dbfc356a233f031e336edee4ffd8fed9224e4127eaee8ebf5621d64685a4",
     "scripts/build_site.py": "e3ed61c8246f65199a170681443f78507cdf8a30bc3d3803f311344d7fd6db99",
     "tests/test_package.py": "d575ae095557325ab18dbb3903039189068f37ea1f75fda27573dd0faec7e4e6",
-    "tests/test_site.py": "6daa840c00ec4e122906b988e2cf5827df4b6d08c0cfc55d2ec6fe9fb892eb1b"
+    "tests/test_site.py": "c8da91421cc8064e5a5e9919620ec44df2c01fccd19a1ecfa4d9cfb37d7cd94f"
   },
   "publication_gates": [
     "Final complete-source six-job Linux/Windows CI",
@@ -75,5 +76,13 @@
     "Zupt 5.2.10 does not restore POSIX modes or ACLs; signed audits may report mode_changed until independently trusted permissions are restored",
     "Historical 0.4.0 similarity and pipeline experiments retain their original revisions and hashes",
     "Optional native crypto availability on Windows is separate from passing base runtime CI"
-  ]
+  ],
+  "ci_regression": {
+    "first_candidate": "67cf9aa6d2b69976a3a99507b8983748a4a1bb08",
+    "first_run_url": "https://github.com/cristiancmoises/secops-codemark/actions/runs/38887558358",
+    "finding": "New website test fixture used an unresolved temporary root on Windows; publication path validation rejected the fixture before report-route assertions",
+    "correction_commit": "239cc2ecc0e3c114769978a87bd70730e3cb383d",
+    "correction": "Resolve the temporary fixture root, matching the production root contract; path validation and regression assertions remain unchanged",
+    "verification_scope": "183 complete GNU/Linux tests passed after correction; publication still requires the exact final-source six-job matrix linked from the release"
+  }
 }

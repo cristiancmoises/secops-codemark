@@ -183,6 +183,6 @@ test_wrong_pinned_fingerprint_is_rejected (test_ssh_signing.SSHSigningTests.test
 test_wrong_public_key_is_rejected_even_with_its_correct_fingerprint (test_ssh_signing.SSHSigningTests.test_wrong_public_key_is_rejected_even_with_its_correct_fingerprint) ... ok
 
 ----------------------------------------------------------------------
-Ran 183 tests in 9.176s
+Ran 183 tests in 7.276s
 
 OK

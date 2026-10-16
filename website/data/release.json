@@ -175,8 +175,8 @@
       "path": "docs/reports/0.4.1-validation.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
-        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+        "en": "Source and test code 239cc2e: 183 GNU/Linux tests after Windows fixture canonicalization; release recipe measured at f72371a. Final publication receipts are separate.",
+        "pt-br": "Fonte e testes 239cc2e: 183 testes GNU/Linux após normalizar a fixture Windows; fluxo medido em f72371a. Verificação final de publicação separada."
       },
       "status": "current"
     },
@@ -188,8 +188,8 @@
       "path": "docs/reports/0.4.1-tests.txt",
       "date": "2026-10-16",
       "scope": {
-        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
-        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+        "en": "Source and test code 239cc2e: 183 GNU/Linux tests after Windows fixture canonicalization; release recipe measured at f72371a. Final publication receipts are separate.",
+        "pt-br": "Fonte e testes 239cc2e: 183 testes GNU/Linux após normalizar a fixture Windows; fluxo medido em f72371a. Verificação final de publicação separada."
       },
       "status": "current"
     },
@@ -201,8 +201,8 @@
       "path": "docs/reports/0.4.1-self-test.json",
       "date": "2026-10-16",
       "scope": {
-        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
-        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+        "en": "Eleven isolated portable checks at f72371a; runtime bytes unchanged by later website-fixture correction. Exact portable hash in the qualification.",
+        "pt-br": "Onze verificações isoladas em f72371a; bytes do runtime preservados pela correção posterior da fixture do site. Hash no relatório de qualificação."
       },
       "status": "current"
     },
@@ -214,8 +214,8 @@
       "path": "docs/reports/0.4.1-review.md",
       "date": "2026-10-16",
       "scope": {
-        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
-        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+        "en": "Source and test code 239cc2e: 183 GNU/Linux tests after Windows fixture canonicalization; release recipe measured at f72371a. Final publication receipts are separate.",
+        "pt-br": "Fonte e testes 239cc2e: 183 testes GNU/Linux após normalizar a fixture Windows; fluxo medido em f72371a. Verificação final de publicação separada."
       },
       "status": "current"
     },
