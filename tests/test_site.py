@@ -19,7 +19,7 @@ class SiteBuildTests(unittest.TestCase):
         spec.loader.exec_module(self.builder)
         stack = ExitStack()
         self.addCleanup(stack.close)
-        self.base = Path(stack.enter_context(tempfile.TemporaryDirectory()))
+        self.base = Path(stack.enter_context(tempfile.TemporaryDirectory())).resolve()
         self.root = self.base / "source"
         self.site = self.root / "website"
         stack.enter_context(patch.object(self.builder, "ROOT", self.root))
