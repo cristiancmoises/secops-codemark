@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-10-15
+
+- Add English and Brazilian Portuguese documentation and a static documentation,
+  wiki and release evidence website with CSS animation and no JavaScript.
+- Prepare reproducible portable executables and genuine ZUPT source releases
+  with verified extraction and SHA-256 checksums.
+- Pin CI actions to verified commits and exercise Python 3.10, 3.12 and 3.14
+  on GNU/Linux and Windows. Published qualification records distinguish local
+  results from CI results and optional component coverage.
+
 ## 0.2.0 — 2026-10-15
 
 - Assinatura OpenSSH Ed25519 com fingerprint e namespace fixados, testada com

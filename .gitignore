@@ -4,3 +4,9 @@ __pycache__/
 dist/
 .codemark/
 test-results.txt
+website/public/
+.env
+.env.*
+*.key
+*.pem
+.ruff_cache/
