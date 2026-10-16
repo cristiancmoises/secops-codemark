@@ -3,10 +3,10 @@
   "date": "2026-10-16",
   "commit": "v0.4.1",
   "site_url": "https://codemark.securityops.co",
-  "status": "pending",
+  "status": "qualified-with-scope",
   "scope": {
-    "en": "0.4.1 release-tooling corrections: source-root links, output preservation, private instruction filtering and report-route collisions. New source qualification is pending; 0.4.0 experiments retain their original scope.",
-    "pt-br": "Correções 0.4.1: links nas raízes de fonte, preservação de saídas, exclusão de instruções privadas e colisões de rotas. A qualificação dos novos fontes está pendente; experimentos 0.4.0 preservam o escopo original."
+    "en": "0.4.1: qualified packaging privacy and output preservation, native archive preflight, report-route collision rejection and a reproduced release workflow. Reports identify measured revisions and limits; final CI and artifact receipts are linked from the repository release.",
+    "pt-br": "0.4.1: empacotamento, preservação de saídas, verificação prévia do compressor, recusa de rotas duplicadas e fluxo reproduzido verificados. Os relatórios identificam revisões e limites; CI final e verificação dos pacotes estão vinculados ao lançamento."
   },
   "repositories": [
     {
@@ -32,10 +32,10 @@
         "en": "All-file integrity",
         "pt-br": "Integridade de todos os regulares"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "GNU/Linux: 183 tests passed, zero failed or skipped. New regressions cover linked source roots, output collisions, private instruction exclusions and report routes.",
+        "pt-br": "GNU/Linux: 183 testes passaram, sem falhas ou ignorados. Regressões novas cobrem links de fontes, conflitos de saída, instruções privadas e rotas."
       },
       "command": "python3 -m unittest discover -s tests -v"
     },
@@ -44,10 +44,10 @@
         "en": "Hybrid authentication and history",
         "pt-br": "Autenticação híbrida e histórico"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "The complete 0.4.1 run exercised real OpenSSL 3.5.7 hybrid signatures, independent pins, history and checkpoint rejection tests. Runtime formats are preserved.",
+        "pt-br": "A suíte 0.4.1 exercitou assinaturas híbridas reais no OpenSSL 3.5.7, chaves fixadas, histórico e checkpoints. Os formatos foram preservados."
       }
     },
     {
@@ -55,10 +55,10 @@
         "en": "Private encrypted export",
         "pt-br": "Exportação privada criptografada"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "Native Zupt 5.2.10 positive and negative tests passed. Restoration qualifies bytes; POSIX modes and ACLs are not restored.",
+        "pt-br": "Testes positivos e negativos com Zupt 5.2.10 passaram. A restauração qualifica bytes; modos POSIX e ACLs não são restaurados."
       }
     },
     {
@@ -66,10 +66,10 @@
         "en": "Linux and Windows CI",
         "pt-br": "CI Linux e Windows"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "Release publication requires the exact final-source matrix: six Linux/Windows jobs on Python 3.10, 3.12 and 3.14. The final run is linked from the release; native optional providers have separate scope.",
+        "pt-br": "A publicação exige a matriz dos fontes finais: seis jobs Linux/Windows em Python 3.10, 3.12 e 3.14. O lançamento vincula a execução final; providers nativos opcionais têm escopo separado."
       }
     },
     {
@@ -77,10 +77,10 @@
         "en": "Portable checks",
         "pt-br": "Verificações portáteis"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "Eleven isolated portable checks passed outside the source tree, including whole-file integrity and native hybrid authentication.",
+        "pt-br": "Onze verificações isoladas passaram fora dos fontes, incluindo integridade completa e autenticação híbrida nativa."
       },
       "command": "python3 -I codemark.pyz self-test --json"
     },
@@ -89,10 +89,10 @@
         "en": "Source review and static checks",
         "pt-br": "Revisão e verificações estáticas"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "Focused release-tooling review and regressions; Ruff, formatting, Pyright and selected-diff secret screening passed. No independent external audit is claimed.",
+        "pt-br": "Revisão focal e regressões; Ruff, formatação, Pyright e varredura delimitada do diff passaram. Não afirma auditoria externa independente."
       }
     },
     {
@@ -100,24 +100,24 @@
         "en": "Website validation",
         "pt-br": "Validação do site"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "The documented release recipe passed strict link validation after download staging. Final generated links, download hashes and real-browser checks gate public activation.",
+        "pt-br": "O fluxo documentado passou na validação estrita após preparar downloads. Links finais, hashes e navegador real são etapas obrigatórias antes da ativação pública."
       },
-      "command": "python3 scripts/build_site.py --check"
+      "command": "python3 scripts/build_site.py --output /tmp/secops-codemark-site-0.4.1 --check"
     },
     {
       "name": {
         "en": "Public release archive",
         "pt-br": "Pacote público da versão"
       },
-      "status": "pending",
+      "status": "pass",
       "detail": {
-        "en": "Awaiting measurement for 0.4.1; historical results are not carried forward.",
-        "pt-br": "Aguardando medição da 0.4.1; resultados históricos não são transferidos."
+        "en": "Publication requires a genuine unencrypted .zupt, zupt test, SHA-256 checksums and extracted-byte comparison against the annotated tag. Earlier artifacts are preserved.",
+        "pt-br": "Publicação exige .zupt genuíno sem criptografia, zupt test, SHA-256 e comparação dos bytes extraídos com a tag anotada. Artefatos anteriores são preservados."
       },
-      "command": "python3 scripts/build.py --output dist --archive"
+      "command": "python3 scripts/build.py --output /tmp/secops-codemark-release-0.4.1 --archive"
     }
   ],
   "metrics": [
@@ -126,7 +126,7 @@
         "en": "Current tests",
         "pt-br": "Testes atuais"
       },
-      "value": "pending",
+      "value": "183",
       "detail": {
         "en": "GNU/Linux: zero failed or skipped; platform CI recorded separately.",
         "pt-br": "GNU/Linux: sem falhas ou ignorados; CI por plataforma registrada separadamente."
@@ -167,6 +167,58 @@
     }
   ],
   "reports": [
+    {
+      "title": {
+        "en": "0.4.1 qualification",
+        "pt-br": "Qualificação 0.4.1"
+      },
+      "path": "docs/reports/0.4.1-validation.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
+        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.1 complete test log",
+        "pt-br": "Log completo dos testes 0.4.1"
+      },
+      "path": "docs/reports/0.4.1-tests.txt",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
+        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.1 portable checks",
+        "pt-br": "Verificações portáteis 0.4.1"
+      },
+      "path": "docs/reports/0.4.1-self-test.json",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
+        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+      },
+      "status": "current"
+    },
+    {
+      "title": {
+        "en": "0.4.1 release tooling review",
+        "pt-br": "Revisão do processo de release 0.4.1"
+      },
+      "path": "docs/reports/0.4.1-review.md",
+      "date": "2026-10-16",
+      "scope": {
+        "en": "Source f72371a, tested Python code 03d0bea: measured local fixtures and release workflow; final publication receipts are separate.",
+        "pt-br": "Fonte f72371a, código Python testado 03d0bea: fixtures locais e fluxo medidos; verificação final de publicação separada."
+      },
+      "status": "current"
+    },
     {
       "title": {
         "en": "0.4.0 qualification · historical",

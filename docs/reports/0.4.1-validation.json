@@ -1,0 +1,79 @@
+{
+  "version": "0.4.1",
+  "date_utc": "2026-10-16T10:24:03.009759+00:00",
+  "status": "candidate-runtime-and-release-tooling-qualified",
+  "qualification_commit": "f72371ae987ad2299778d0f8a637bda85740c38f",
+  "unit_test_code_commit": "03d0bea75e36e11cc36bba06d06ca28471c4a4d3",
+  "environment": {
+    "python": "3.12.12",
+    "platform": "Linux-7.2.9-x86_64-with-glibc2.41",
+    "package_version": "0.4.1",
+    "openssl": {
+      "exit": 0,
+      "version": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)"
+    },
+    "zupt": {
+      "exit": 0,
+      "version": "zupt 5.2.10 (ZUPT)"
+    },
+    "gpg": {
+      "exit": 0,
+      "version": "gpg (GnuPG) 2.4.8"
+    },
+    "openssh": {
+      "exit": 0,
+      "version": "OpenSSH_10.4p1, OpenSSL 3.5.7 9 Jun 2026"
+    }
+  },
+  "confinement": "Networkless namespace; read-only project and tool store; disposable writable workspace; dropped capabilities; no_new_privs; unchanged 2 GiB address-space and bounded process/time/file limits",
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "passed": 183,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 9.176,
+    "exit": 0,
+    "log_sha256": "fb63cd6f96e54b32b14b97c6c6bf0723733c0c21b7e2164646194ba77d5a42d0"
+  },
+  "portable": {
+    "sha256": "a4b4e76dcda43a4631a16283afe26ca5814cd8c2246ca1172ca6a16afeafafc7",
+    "checks_passed": 11,
+    "checks_skipped": 0,
+    "isolated_python": true,
+    "working_directory": "outside source tree"
+  },
+  "static_checks": {
+    "ruff": "pass",
+    "format": "31 files formatted",
+    "pyright": "0 errors; 0 warnings",
+    "selected_source_secrets": "clean; bounded selected-diff screening is not proof of absence"
+  },
+  "release_recipe": {
+    "status": "pass",
+    "command_scope": "Genuine unencrypted native archive build and test, isolated portable, two asset checksum checks, three-file download staging and strict 81-page site link check",
+    "documentation_fix": "The first trial rejected an unmapped repository-source link; the documented source URL was corrected and the complete recipe passed on a fresh second output",
+    "native_archive_version": "5.2.10",
+    "scope": "Candidate archive, not the final tagged publication artifact"
+  },
+  "changed_source_sha256": {
+    "codemark/__init__.py": "466f9843aadd470be1ceea4d7e453e653e1878759b15d94002cab3d395cc1790",
+    "scripts/build.py": "f280dbfc356a233f031e336edee4ffd8fed9224e4127eaee8ebf5621d64685a4",
+    "scripts/build_site.py": "e3ed61c8246f65199a170681443f78507cdf8a30bc3d3803f311344d7fd6db99",
+    "tests/test_package.py": "d575ae095557325ab18dbb3903039189068f37ea1f75fda27573dd0faec7e4e6",
+    "tests/test_site.py": "6daa840c00ec4e122906b988e2cf5827df4b6d08c0cfc55d2ec6fe9fb892eb1b"
+  },
+  "publication_gates": [
+    "Final complete-source six-job Linux/Windows CI",
+    "Final annotated tag, unencrypted archive test and extracted-byte comparison",
+    "Final generated links and exact public download hashes",
+    "Atomic website activation and public browser/HTTPS verification"
+  ],
+  "limits": [
+    "Focused source and release-tooling review is not an independent external audit or certification",
+    "Filename exclusions do not prove ordinary source contents contain no secrets",
+    "Later native compression/test or filesystem failures may leave incomplete output; retain diagnostics and retry in a new output",
+    "Zupt 5.2.10 does not restore POSIX modes or ACLs; signed audits may report mode_changed until independently trusted permissions are restored",
+    "Historical 0.4.0 similarity and pipeline experiments retain their original revisions and hashes",
+    "Optional native crypto availability on Windows is separate from passing base runtime CI"
+  ]
+}
